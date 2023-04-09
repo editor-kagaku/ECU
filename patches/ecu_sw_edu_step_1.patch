@@ -1,0 +1,393 @@
+diff -ur modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml modelcar_20230222/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml
+--- modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2022-07-20 16:22:23.431050800 +0900
++++ modelcar_20230222/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2022-08-16 10:25:36.000000000 +0900
+@@ -180,10 +180,20 @@
+       IB_CBL_TimingEvent_LedBlinker_500ms:
+         DefinitionRef: RteEventToTaskMapping
+         RteActivationOffset: 0.0
+-        RtePositionInTask: 9
++        RtePositionInTask: 10
+         RteEventRef: /RcCar/CddLedBlinker/IB_CBL/LedBlinker_timingEvent
+         RteMappedToTaskRef: /Ecu_CBO/Os/ECU_CBO_TASK_100ms
+         RteUsedOsAlarmRef: /Ecu_CBO/Os/ECU_CBO_ALARM_100ms
++    SWCI_CddSwState:
++      DefinitionRef: RteSwComponentInstance
++      RteSoftwareComponentInstanceRef: /RcCar/Composition_RcCar/CddSwState
++      IB_CSS_TimingEvent_SwState_500ms:
++        DefinitionRef: RteEventToTaskMapping
++        RteActivationOffset: 0.0
++        RtePositionInTask: 9
++        RteEventRef: /RcCar/CddSwState/IB_CSS/SwState_timingEvent
++        RteMappedToTaskRef: /Ecu_CBO/Os/ECU_CBO_TASK_100ms
++        RteUsedOsAlarmRef: /Ecu_CBO/Os/ECU_CBO_ALARM_100ms
+     RteOsInteraction:
+       RteUsedOsActivation1:
+         DefinitionRef: RteUsedOsActivation
+diff -ur modelcar/swc-application/1ecu/ecu_cbo/Makefile modelcar_20230222/swc-application/1ecu/ecu_cbo/Makefile
+--- modelcar/swc-application/1ecu/ecu_cbo/Makefile	2022-07-20 16:22:23.411731600 +0900
++++ modelcar_20230222/swc-application/1ecu/ecu_cbo/Makefile	2022-08-16 10:25:35.000000000 +0900
+@@ -205,6 +205,7 @@
+ 	CddBodyControl \
+ 	CddController \
+ 	CddRcCar \
++	CddSwState \
+ 	OperationManager \
+ 	DriveManager \
+ 	Os_Hook \
+diff -ur modelcar/swc-application/1ecu/ecu_cbo/memory.txt modelcar_20230222/swc-application/1ecu/ecu_cbo/memory.txt
+--- modelcar/swc-application/1ecu/ecu_cbo/memory.txt	2022-07-20 16:22:23.486366100 +0900
++++ modelcar_20230222/swc-application/1ecu/ecu_cbo/memory.txt	2022-10-10 16:23:21.000000000 +0900
+@@ -1,4 +1,7 @@
++ROM, 0x00000000, 1024
++RAM, 0xFEDE8000, 512
+ MMAP, 0xFFC10000, mmap1.bin
+ MMAP, 0xFFCE5000, mmap2.bin
+-MMAP, 0xFFCf0000, mmap3.bin
+-MMAP, 0xffE30000, mmap4.bin
++MMAP, 0xFFCF0000, mmap3.bin
++MMAP, 0xFFE30000, mmap4.bin
++MMAP, 0xFF305288, mmap5.bin
+diff -ur modelcar/swc-application/EcuM/EcuM_Callout.h modelcar_20230222/swc-application/EcuM/EcuM_Callout.h
+--- modelcar/swc-application/EcuM/EcuM_Callout.h	2015-07-17 10:31:28.000000000 +0900
++++ modelcar_20230222/swc-application/EcuM/EcuM_Callout.h	2023-02-22 20:37:35.192825300 +0900
+@@ -73,10 +73,10 @@
+ 	print_banner();
+ }
+ 
+-#define ALARM_TICK_125US	1000U
+-#define ALARM_TICK_10MS		80000U
+-#define ALARM_TICK_20MS		160000U
+-#define ALARM_TICK_100MS	800000U
++#define ALARM_TICK_125US	200000U
++#define ALARM_TICK_10MS		20000U
++#define ALARM_TICK_20MS		40000U
++#define ALARM_TICK_100MS	200000U
+ 
+ LOCAL_INLINE void
+ EcuM_BswStartupTwo(void)
+diff -ur modelcar/swc-application/common/arxmls/RcCar.arxml modelcar_20230222/swc-application/common/arxmls/RcCar.arxml
+--- modelcar/swc-application/common/arxmls/RcCar.arxml	2015-07-17 10:31:28.000000000 +0900
++++ modelcar_20230222/swc-application/common/arxmls/RcCar.arxml	2015-07-17 10:31:28.000000000 +0900
+@@ -89,6 +89,34 @@
+ 					</DATA-ELEMENTS>
+ 				</SENDER-RECEIVER-INTERFACE>
+ 				<SENDER-RECEIVER-INTERFACE>
++					<SHORT-NAME>IfSwState</SHORT-NAME>
++					<IS-SERVICE>false</IS-SERVICE>
++					<DATA-ELEMENTS>
++						<VARIABLE-DATA-PROTOTYPE>
++							<SHORT-NAME>dsw</SHORT-NAME>
++							<SW-DATA-DEF-PROPS>
++								<SW-DATA-DEF-PROPS-VARIANTS>
++									<SW-DATA-DEF-PROPS-CONDITIONAL>
++										<SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
++									</SW-DATA-DEF-PROPS-CONDITIONAL>
++								</SW-DATA-DEF-PROPS-VARIANTS>
++							</SW-DATA-DEF-PROPS>
++							<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/ImplDataTypes/IDT_Switch</TYPE-TREF>
++						</VARIABLE-DATA-PROTOTYPE>
++						<VARIABLE-DATA-PROTOTYPE>
++							<SHORT-NAME>psw</SHORT-NAME>
++							<SW-DATA-DEF-PROPS>
++								<SW-DATA-DEF-PROPS-VARIANTS>
++									<SW-DATA-DEF-PROPS-CONDITIONAL>
++										<SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
++									</SW-DATA-DEF-PROPS-CONDITIONAL>
++								</SW-DATA-DEF-PROPS-VARIANTS>
++							</SW-DATA-DEF-PROPS>
++							<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/ImplDataTypes/IDT_Switch</TYPE-TREF>
++						</VARIABLE-DATA-PROTOTYPE>
++					</DATA-ELEMENTS>
++				</SENDER-RECEIVER-INTERFACE>
++				<SENDER-RECEIVER-INTERFACE>
+ 					<SHORT-NAME>IfDriving</SHORT-NAME>
+ 					<IS-SERVICE>false</IS-SERVICE>
+ 					<DATA-ELEMENTS>
+@@ -1360,6 +1388,44 @@
+ 				</COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
+ 				<COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
+ 					<SHORT-NAME>CddLedBlinker</SHORT-NAME>
++					<PORTS>
++						<R-PORT-PROTOTYPE>
++							<SHORT-NAME>SwStateIn</SHORT-NAME>
++							<REQUIRED-COM-SPECS>
++								<NONQUEUED-RECEIVER-COM-SPEC>
++									<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/dsw</DATA-ELEMENT-REF>
++									<HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
++									<USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
++									<ALIVE-TIMEOUT>0.0</ALIVE-TIMEOUT>
++									<ENABLE-UPDATE>true</ENABLE-UPDATE>
++									<HANDLE-NEVER-RECEIVED>true</HANDLE-NEVER-RECEIVED>
++									<HANDLE-TIMEOUT-TYPE>NONE</HANDLE-TIMEOUT-TYPE>
++									<INIT-VALUE>
++										<NUMERICAL-VALUE-SPECIFICATION>
++											<SHORT-LABEL>IDT_Switch</SHORT-LABEL>
++											<VALUE>0</VALUE>
++										</NUMERICAL-VALUE-SPECIFICATION>
++									</INIT-VALUE>
++								</NONQUEUED-RECEIVER-COM-SPEC>
++								<NONQUEUED-RECEIVER-COM-SPEC>
++									<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/psw</DATA-ELEMENT-REF>
++									<HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
++									<USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
++									<ALIVE-TIMEOUT>0.0</ALIVE-TIMEOUT>
++									<ENABLE-UPDATE>true</ENABLE-UPDATE>
++									<HANDLE-NEVER-RECEIVED>true</HANDLE-NEVER-RECEIVED>
++									<HANDLE-TIMEOUT-TYPE>NONE</HANDLE-TIMEOUT-TYPE>
++									<INIT-VALUE>
++										<NUMERICAL-VALUE-SPECIFICATION>
++											<SHORT-LABEL>IDT_Switch</SHORT-LABEL>
++											<VALUE>0</VALUE>
++										</NUMERICAL-VALUE-SPECIFICATION>
++									</INIT-VALUE>
++								</NONQUEUED-RECEIVER-COM-SPEC>
++							</REQUIRED-COM-SPECS>
++							<REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/RcCar/IfSwState</REQUIRED-INTERFACE-TREF>
++						</R-PORT-PROTOTYPE>
++					</PORTS>
+ 					<INTERNAL-BEHAVIORS>
+ 						<SWC-INTERNAL-BEHAVIOR>
+ 							<SHORT-NAME>IB_CBL</SHORT-NAME>
+@@ -1376,6 +1442,26 @@
+ 									<SHORT-NAME>LedBlinker</SHORT-NAME>
+ 									<MINIMUM-START-INTERVAL>0.0</MINIMUM-START-INTERVAL>
+ 									<CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
++									<DATA-RECEIVE-POINT-BY-ARGUMENTS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME>dataReceivePoint_LedBlinker_SwStateIn_dsw</SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/RcCar/CddLedBlinker/SwStateIn</PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/dsw</TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME>dataReceivePoint_LedBlinker_SwStateIn_psw</SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/RcCar/CddLedBlinker/SwStateIn</PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/psw</TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++									</DATA-RECEIVE-POINT-BY-ARGUMENTS>
+ 									<SYMBOL>LedBlinker</SYMBOL>
+ 								</RUNNABLE-ENTITY>
+ 							</RUNNABLES>
+@@ -1383,6 +1469,81 @@
+ 						</SWC-INTERNAL-BEHAVIOR>
+ 					</INTERNAL-BEHAVIORS>
+ 				</COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
++				<COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
++					<SHORT-NAME>CddSwState</SHORT-NAME>
++					<PORTS>
++						<P-PORT-PROTOTYPE>
++							<SHORT-NAME>SwStateOut</SHORT-NAME>
++							<PROVIDED-COM-SPECS>
++								<NONQUEUED-SENDER-COM-SPEC>
++									<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/dsw</DATA-ELEMENT-REF>
++									<HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
++									<USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
++									<INIT-VALUE>
++										<NUMERICAL-VALUE-SPECIFICATION>
++											<SHORT-LABEL>IDT_Switch</SHORT-LABEL>
++											<VALUE>0</VALUE>
++										</NUMERICAL-VALUE-SPECIFICATION>
++									</INIT-VALUE>
++								</NONQUEUED-SENDER-COM-SPEC>
++								<NONQUEUED-SENDER-COM-SPEC>
++									<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/psw</DATA-ELEMENT-REF>
++									<HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
++									<USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
++									<INIT-VALUE>
++										<NUMERICAL-VALUE-SPECIFICATION>
++											<SHORT-LABEL>IDT_Switch</SHORT-LABEL>
++											<VALUE>0</VALUE>
++										</NUMERICAL-VALUE-SPECIFICATION>
++									</INIT-VALUE>
++								</NONQUEUED-SENDER-COM-SPEC>
++							</PROVIDED-COM-SPECS>
++							<PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/RcCar/IfSwState</PROVIDED-INTERFACE-TREF>
++						</P-PORT-PROTOTYPE>
++					</PORTS>
++					<INTERNAL-BEHAVIORS>
++						<SWC-INTERNAL-BEHAVIOR>
++							<SHORT-NAME>IB_CSS</SHORT-NAME>
++							<EVENTS>
++								<TIMING-EVENT>
++									<SHORT-NAME>SwState_timingEvent</SHORT-NAME>
++									<START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/RcCar/CddSwState/IB_CSS/SwState</START-ON-EVENT-REF>
++									<PERIOD>0.5</PERIOD>
++								</TIMING-EVENT>
++							</EVENTS>
++							<HANDLE-TERMINATION-AND-RESTART>NO-SUPPORT</HANDLE-TERMINATION-AND-RESTART>
++							<RUNNABLES>
++								<RUNNABLE-ENTITY>
++									<SHORT-NAME>SwState</SHORT-NAME>
++									<MINIMUM-START-INTERVAL>0.0</MINIMUM-START-INTERVAL>
++									<CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
++									<DATA-SEND-POINTS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME>dataSendPoint_CddSwState_SwStateOut_dsw</SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddSwState/SwStateOut</PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/dsw</TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME>dataSendPoint_CddSwState_SwStateOut_psw</SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddSwState/SwStateOut</PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/psw</TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++									</DATA-SEND-POINTS>
++									<SYMBOL>SwState</SYMBOL>
++								</RUNNABLE-ENTITY>
++							</RUNNABLES>
++							<SUPPORTS-MULTIPLE-INSTANTIATION>false</SUPPORTS-MULTIPLE-INSTANTIATION>
++						</SWC-INTERNAL-BEHAVIOR>
++					</INTERNAL-BEHAVIORS>
++				</COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
+ 				<COMPOSITION-SW-COMPONENT-TYPE>
+ 					<SHORT-NAME>Composition_RcCar</SHORT-NAME>
+ 					<COMPONENTS>
+@@ -1410,6 +1571,10 @@
+ 							<SHORT-NAME>CddLedBlinker</SHORT-NAME>
+ 							<TYPE-TREF DEST="COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE">/RcCar/CddLedBlinker</TYPE-TREF>
+ 						</SW-COMPONENT-PROTOTYPE>
++						<SW-COMPONENT-PROTOTYPE>
++							<SHORT-NAME>CddSwState</SHORT-NAME>
++							<TYPE-TREF DEST="COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE">/RcCar/CddSwState</TYPE-TREF>
++						</SW-COMPONENT-PROTOTYPE>
+ 					</COMPONENTS>
+ 					<CONNECTORS>
+ 						<ASSEMBLY-SW-CONNECTOR>
+@@ -1511,6 +1676,17 @@
+ 								<TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/RcCar/OperationManager/RCB3CommandClt</TARGET-R-PORT-REF>
+ 							</REQUESTER-IREF>
+ 						</ASSEMBLY-SW-CONNECTOR>
++						<ASSEMBLY-SW-CONNECTOR>
++							<SHORT-NAME>CddSwState_SwStateOut_to_CddLedBlinker_SwStateIn</SHORT-NAME>
++							<PROVIDER-IREF>
++								<CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/RcCar/Composition_RcCar/CddSwState</CONTEXT-COMPONENT-REF>
++								<TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddSwState/SwStateOut</TARGET-P-PORT-REF>
++							</PROVIDER-IREF>
++							<REQUESTER-IREF>
++								<CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/RcCar/Composition_RcCar/CddLedBlinker</CONTEXT-COMPONENT-REF>
++								<TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/RcCar/CddLedBlinker/SwStateIn</TARGET-R-PORT-REF>
++							</REQUESTER-IREF>
++						</ASSEMBLY-SW-CONNECTOR>
+ 					</CONNECTORS>
+ 				</COMPOSITION-SW-COMPONENT-TYPE>
+ 			</ELEMENTS>
+diff -ur modelcar/swc-application/common/swcs/CddController.c modelcar_20230222/swc-application/common/swcs/CddController.c
+--- modelcar/swc-application/common/swcs/CddController.c	2015-07-17 10:31:28.000000000 +0900
++++ modelcar_20230222/swc-application/common/swcs/CddController.c	2023-02-22 20:54:15.907776200 +0900
+@@ -131,6 +131,24 @@
+ {
+ 	uint8 c;
+ 
++#if SIMULATE_ON_ATHRILL
++	g_rcb3_rmsg[0] = (*(uint8*)(0xFF305288));
++	g_rcb3_rmsg[1] = (*(uint8*)(0xFF305289));
++	g_rcb3_rmsg[2] = (*(uint8*)(0xFF30528A));
++	g_rcb3_rmsg[3] = (*(uint8*)(0xFF30528B));
++	g_rcb3_rmsg[4] = (*(uint8*)(0xFF30528C));
++	g_rcb3_rmsg[5] = (*(uint8*)(0xFF30528D));
++	g_rcb3_rmsg[6] = (*(uint8*)(0xFF30528E));
++	g_rcb3_rmsg[7] = (*(uint8*)(0xFF30528F));
++
++	RCB3CommandData = (IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_BUTTON_L];         /* ボタン情報1 */
++	RCB3CommandData += ((IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_BUTTON_H]) << 8U;/* ボタン情報2 */
++	RCB3CommandData += ((IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_L_ANALOG_LR]) << 16U;  /* アナログ1 */
++	RCB3CommandData += ((IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_R_ANALOG_UD]) << 24U;  /* アナログ4 */
++	/*syslog_1(LOG_NOTICE, "MessageParser:%08x", RCB3CommandData);*/
++	RCB3CommandGotFlg = FALSE;
++	rx_mode = RX_MODE_INIT;
++#else
+ 	while (tReceiveSBDBTUart(&c, 1)) {
+ 		switch (rx_mode) {
+ 		case RX_MODE_INIT:
+@@ -175,6 +193,7 @@
+ #endif /* TOPPERS_WITH_DISP */
+ 		}
+ 	}
++#endif
+ }
+ 
+ /*
+--- modelcar/swc-application/common/swcs/ModelCarControl.h	2015-07-17 10:31:28.000000000 +0900
++++ modelcar_20230222/swc-application/common/swcs/ModelCarControl.h	2023-02-22 20:56:54.254246200 +0900
+@@ -151,6 +151,7 @@
+ /*
+  *  SW-C の初期化コード
+  */
++extern void CddSwStateInit(void);
+ extern void CddLedBlinkerInit(void);
+ extern void CddBodyControlInit(void);
+ extern void CddControllerInit(void);
+--- modelcar/swc-application/common/swcs/Os_Hook.c	2015-07-17 10:31:28.000000000 +0900
++++ modelcar_20230222/swc-application/common/swcs/Os_Hook.c	2023-02-22 20:57:43.443753500 +0900
+@@ -59,6 +59,9 @@
+ 	 * ECU構成に合わせて必要な初期化を実施
+ 	 */
+ 
++	/* SW初期化 */
++	CddSwStateInit();
++
+ 	/* LED初期化 */
+ 	CddLedBlinkerInit();
+ 
+--- modelcar/swc-application/common/swcs/CddLedBlinker.c	2023-02-26 23:25:17.628705400 +0900
++++ modelcar_20230222/swc-application/common/swcs/CddLedBlinker.c	2023-02-26 23:12:53.883048600 +0900
+@@ -55,8 +55,6 @@
+ CddLedBlinkerInit(void)
+ {
+ 	led_init();
+-	switch_dip_init();
+-	switch_push_init();
+ }
+ 
+ /*
+@@ -68,27 +66,16 @@
+ 	static uint8	active_led_val = LED1;
+ 	static boolean	active_led_up  = TRUE;
+ 
+-	static IDT_Switch dsw_state = 0;
+-	static IDT_Switch latch = 0; 
+-	IDT_Switch	psw_state = 0;
+-
+-	if ( latch == 0 )
+-	{
+-		/* DSW の値は一度だけ取得するため、ラッチでそれを保証する	*/
+-#if SIMULATE_ON_ATHRILL
+-		/* シミュレーションでは、DSW初期化で値がクリアされるため、	*/
+-		/* メモリファイルを次の瞬間に戻す仕組みが必要となる			*/
+-		/* ただし、仕組みが手間なので、ひとまずメモリ読出しで対応	*/
+-		dsw_state = (IDT_Switch)(*(uint8*)(0xFF305290));
+-#else
+-		dsw_state = (IDT_Switch)switch_dip_sense();
+-#endif
+-		syslog_1(LOG_NOTICE, "SwState:dsw:%02x", dsw_state );
+-		latch = 1;
++	IDT_Switch dsw = 0;
++	IDT_Switch psw = 0;
++	Std_ReturnType ret = 0;
++
++	ret = Rte_Read_SwStateIn_dsw( &dsw );
++	ret += Rte_Read_SwStateIn_psw( &psw );
++	if ( ret != 0 ) {
++		syslog_0( LOG_NOTICE, "SwStateIn error" );
+ 	}
+ 
+-	psw_state = (IDT_Switch)switch_push_sense();
+-
+ 	syslog_2(LOG_NOTICE, "LedBlinker:dsw psw:%02x %02x", dsw, psw );
+ 	if ( dsw == 0 && psw == 0 ) {	/* dsw がすべて off かつ psw が off */
+ 		led_out(active_led_val);

@@ -1,0 +1,53 @@
+--- modelcar/swc-application/common/swcs/CddLedBlinker.c	2015-07-17 10:31:28.000000000 +0900
++++ modelcar/swc-application/common/swcs/CddLedBlinker_step0.c	2023-02-26 23:25:17.628705400 +0900
+@@ -46,6 +46,7 @@
+ 
+ #include "Rte_CddLedBlinker.h"
+ #include "ModelCarControl.h"
++#include "t_syslog.h"
+ 
+ /*
+  *  CDD SW-C CddLedBlinker用の初期化
+@@ -54,6 +55,8 @@
+ CddLedBlinkerInit(void)
+ {
+ 	led_init();
++	switch_dip_init();
++	switch_push_init();
+ }
+ 
+ /*
+@@ -65,7 +68,32 @@
+ 	static uint8	active_led_val = LED1;
+ 	static boolean	active_led_up  = TRUE;
+ 
+-	led_out(active_led_val);
++	static IDT_Switch dsw_state = 0;
++	static IDT_Switch latch = 0; 
++	IDT_Switch	psw_state = 0;
++
++	if ( latch == 0 )
++	{
++		/* DSW の値は一度だけ取得するため、ラッチでそれを保証する	*/
++#if SIMULATE_ON_ATHRILL
++		/* シミュレーションでは、DSW初期化で値がクリアされるため、	*/
++		/* メモリファイルを次の瞬間に戻す仕組みが必要となる			*/
++		/* ただし、仕組みが手間なので、ひとまずメモリ読出しで対応	*/
++		dsw_state = (IDT_Switch)(*(uint8*)(0xFF305290));
++#else
++		dsw_state = (IDT_Switch)switch_dip_sense();
++#endif
++		syslog_1(LOG_NOTICE, "SwState:dsw:%02x", dsw_state );
++		latch = 1;
++	}
++
++	psw_state = (IDT_Switch)switch_push_sense();
++
++	syslog_2(LOG_NOTICE, "LedBlinker:dsw psw:%02x %02x", dsw, psw );
++	if ( dsw == 0 && psw == 0 ) {	/* dsw がすべて off かつ psw が off */
++		led_out(active_led_val);
++	}
++	syslog_1(LOG_NOTICE, "LedBlinker:State:%02x", (*(uint8*)(0xffc10020)));
+ 
+ 	if(active_led_val == LED4){
+ 		active_led_up = FALSE;

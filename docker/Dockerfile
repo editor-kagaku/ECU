@@ -91,7 +91,7 @@ RUN rm sample1.* Rte_Type.h
 RUN sed -i -E "s;APPLDIR = .*;APPLDIR = ../../../driver ../../common/swcs ../../EcuM;g" Makefile
 RUN sed -i -E "s;APPLNAME = .*;APPLNAME = CddLedBlinker \\\ \n\tCddBodyControl \\\ \n\tCddController \\\ \n\tCddRcCar \\\ \n\tOperationManager \\\ \n\tDriveManager \\\ \n\tOs_Hook \\\ \n\tC_Init_Code \\\ \n\tEcuM \\\ \n\tEcuM_StartupTask \\\ \n\tRte \\\ \n\thsbrh850f1l_device \\\ \n\tdriver_if \\\ \n\trcb3 \\\ \n\trlin3x \\\ \n\ttaub_pwm \n;g" Makefile
 RUN sed -i -E "s;\\\ $;\\\;g"  Makefile
-RUN sed -i -E "s;^(CDEFS :=.*CDEFS\));USER_MACRO = -DTOPPERS_NO_USE_SCHM -DTOPPERS_NO_USE_COMSTACK -DTOPPERS_USE_BODY -DTOPPERS_USE_OPERATION -DTOPPERS_USE_CONTROL\n\1;g" Makefile
+RUN sed -i -E "s;^(CDEFS :=.*CDEFS\));USER_MACRO = -DTOPPERS_NO_USE_SCHM -DTOPPERS_NO_USE_COMSTACK -DTOPPERS_USE_BODY -DTOPPERS_USE_OPERATION -DTOPPERS_USE_CONTROL -DSIMULATE_ON_ATHRILL\n\1;g" Makefile
 RUN sed -i -E "s;^(CDEFS := .*);\1 \$(USER_MACRO);g" Makefile
 RUN sed -i -E "s;APPL_COBJS = .*\.o;APPL_COBJS = \$(APPLNAME:=.o);g" Makefile
 RUN sed -i -E "s:CFGNAME = .*:CFGNAME = Ecuc_CBO:g" Makefile
