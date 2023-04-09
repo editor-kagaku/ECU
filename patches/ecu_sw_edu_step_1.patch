@@ -1,6 +1,6 @@
-diff -ur modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml modelcar_20230222/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml
+diff -ur modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml
 --- modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2022-07-20 16:22:23.431050800 +0900
-+++ modelcar_20230222/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2022-08-16 10:25:36.000000000 +0900
++++ modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2022-08-16 10:25:36.000000000 +0900
 @@ -180,10 +180,20 @@
        IB_CBL_TimingEvent_LedBlinker_500ms:
          DefinitionRef: RteEventToTaskMapping
@@ -23,9 +23,9 @@ diff -ur modelcar/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml modelcar_20230222/s
      RteOsInteraction:
        RteUsedOsActivation1:
          DefinitionRef: RteUsedOsActivation
-diff -ur modelcar/swc-application/1ecu/ecu_cbo/Makefile modelcar_20230222/swc-application/1ecu/ecu_cbo/Makefile
+diff -ur modelcar/swc-application/1ecu/ecu_cbo/Makefile modelcar/swc-application/1ecu/ecu_cbo/Makefile
 --- modelcar/swc-application/1ecu/ecu_cbo/Makefile	2022-07-20 16:22:23.411731600 +0900
-+++ modelcar_20230222/swc-application/1ecu/ecu_cbo/Makefile	2022-08-16 10:25:35.000000000 +0900
++++ modelcar/swc-application/1ecu/ecu_cbo/Makefile	2022-08-16 10:25:35.000000000 +0900
 @@ -205,6 +205,7 @@
  	CddBodyControl \
  	CddController \
@@ -34,9 +34,9 @@ diff -ur modelcar/swc-application/1ecu/ecu_cbo/Makefile modelcar_20230222/swc-ap
  	OperationManager \
  	DriveManager \
  	Os_Hook \
-diff -ur modelcar/swc-application/1ecu/ecu_cbo/memory.txt modelcar_20230222/swc-application/1ecu/ecu_cbo/memory.txt
+diff -ur modelcar/swc-application/1ecu/ecu_cbo/memory.txt modelcar/swc-application/1ecu/ecu_cbo/memory.txt
 --- modelcar/swc-application/1ecu/ecu_cbo/memory.txt	2022-07-20 16:22:23.486366100 +0900
-+++ modelcar_20230222/swc-application/1ecu/ecu_cbo/memory.txt	2022-10-10 16:23:21.000000000 +0900
++++ modelcar/swc-application/1ecu/ecu_cbo/memory.txt	2022-10-10 16:23:21.000000000 +0900
 @@ -1,4 +1,7 @@
 +ROM, 0x00000000, 1024
 +RAM, 0xFEDE8000, 512
@@ -47,9 +47,9 @@ diff -ur modelcar/swc-application/1ecu/ecu_cbo/memory.txt modelcar_20230222/swc-
 +MMAP, 0xFFCF0000, mmap3.bin
 +MMAP, 0xFFE30000, mmap4.bin
 +MMAP, 0xFF305288, mmap5.bin
-diff -ur modelcar/swc-application/EcuM/EcuM_Callout.h modelcar_20230222/swc-application/EcuM/EcuM_Callout.h
+diff -ur modelcar/swc-application/EcuM/EcuM_Callout.h modelcar/swc-application/EcuM/EcuM_Callout.h
 --- modelcar/swc-application/EcuM/EcuM_Callout.h	2015-07-17 10:31:28.000000000 +0900
-+++ modelcar_20230222/swc-application/EcuM/EcuM_Callout.h	2023-02-22 20:37:35.192825300 +0900
++++ modelcar/swc-application/EcuM/EcuM_Callout.h	2023-02-22 20:37:35.192825300 +0900
 @@ -73,10 +73,10 @@
  	print_banner();
  }
@@ -65,9 +65,9 @@ diff -ur modelcar/swc-application/EcuM/EcuM_Callout.h modelcar_20230222/swc-appl
  
  LOCAL_INLINE void
  EcuM_BswStartupTwo(void)
-diff -ur modelcar/swc-application/common/arxmls/RcCar.arxml modelcar_20230222/swc-application/common/arxmls/RcCar.arxml
+diff -ur modelcar/swc-application/common/arxmls/RcCar.arxml modelcar/swc-application/common/arxmls/RcCar.arxml
 --- modelcar/swc-application/common/arxmls/RcCar.arxml	2015-07-17 10:31:28.000000000 +0900
-+++ modelcar_20230222/swc-application/common/arxmls/RcCar.arxml	2015-07-17 10:31:28.000000000 +0900
++++ modelcar/swc-application/common/arxmls/RcCar.arxml	2015-07-17 10:31:28.000000000 +0900
 @@ -89,6 +89,34 @@
  					</DATA-ELEMENTS>
  				</SENDER-RECEIVER-INTERFACE>
@@ -286,9 +286,9 @@ diff -ur modelcar/swc-application/common/arxmls/RcCar.arxml modelcar_20230222/sw
  					</CONNECTORS>
  				</COMPOSITION-SW-COMPONENT-TYPE>
  			</ELEMENTS>
-diff -ur modelcar/swc-application/common/swcs/CddController.c modelcar_20230222/swc-application/common/swcs/CddController.c
+diff -ur modelcar/swc-application/common/swcs/CddController.c modelcar/swc-application/common/swcs/CddController.c
 --- modelcar/swc-application/common/swcs/CddController.c	2015-07-17 10:31:28.000000000 +0900
-+++ modelcar_20230222/swc-application/common/swcs/CddController.c	2023-02-22 20:54:15.907776200 +0900
++++ modelcar/swc-application/common/swcs/CddController.c	2023-02-22 20:54:15.907776200 +0900
 @@ -131,6 +131,24 @@
  {
  	uint8 c;
@@ -323,7 +323,7 @@ diff -ur modelcar/swc-application/common/swcs/CddController.c modelcar_20230222/
  
  /*
 --- modelcar/swc-application/common/swcs/ModelCarControl.h	2015-07-17 10:31:28.000000000 +0900
-+++ modelcar_20230222/swc-application/common/swcs/ModelCarControl.h	2023-02-22 20:56:54.254246200 +0900
++++ modelcar/swc-application/common/swcs/ModelCarControl.h	2023-02-22 20:56:54.254246200 +0900
 @@ -151,6 +151,7 @@
  /*
   *  SW-C の初期化コード
@@ -333,7 +333,7 @@ diff -ur modelcar/swc-application/common/swcs/CddController.c modelcar_20230222/
  extern void CddBodyControlInit(void);
  extern void CddControllerInit(void);
 --- modelcar/swc-application/common/swcs/Os_Hook.c	2015-07-17 10:31:28.000000000 +0900
-+++ modelcar_20230222/swc-application/common/swcs/Os_Hook.c	2023-02-22 20:57:43.443753500 +0900
++++ modelcar/swc-application/common/swcs/Os_Hook.c	2023-02-22 20:57:43.443753500 +0900
 @@ -59,6 +59,9 @@
  	 * ECU構成に合わせて必要な初期化を実施
  	 */
@@ -345,7 +345,7 @@ diff -ur modelcar/swc-application/common/swcs/CddController.c modelcar_20230222/
  	CddLedBlinkerInit();
  
 --- modelcar/swc-application/common/swcs/CddLedBlinker.c	2023-02-26 23:25:17.628705400 +0900
-+++ modelcar_20230222/swc-application/common/swcs/CddLedBlinker.c	2023-02-26 23:12:53.883048600 +0900
++++ modelcar/swc-application/common/swcs/CddLedBlinker.c	2023-02-26 23:12:53.883048600 +0900
 @@ -55,8 +55,6 @@
  CddLedBlinkerInit(void)
  {
