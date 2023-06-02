@@ -1,0 +1,325 @@
+diff -uNr ecu_education_work_step1/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml ecu_education_work_step2/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml
+--- ecu_education_work_step1/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2023-06-06 03:14:34.725572100 +0900
++++ ecu_education_work_step2/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2023-06-06 03:15:47.523903500 +0900
+@@ -180,7 +180,7 @@
+       IB_CBL_TimingEvent_LedBlinker_500ms:
+         DefinitionRef: RteEventToTaskMapping
+         RteActivationOffset: 0.0
+-        RtePositionInTask: 10
++        RtePositionInTask: 11
+         RteEventRef: /RcCar/CddLedBlinker/IB_CBL/LedBlinker_timingEvent
+         RteMappedToTaskRef: /Ecu_CBO/Os/ECU_CBO_TASK_100ms
+         RteUsedOsAlarmRef: /Ecu_CBO/Os/ECU_CBO_ALARM_100ms
+@@ -190,10 +190,20 @@
+       IB_LC_TimingEvent_AppLedControl_500ms:
+         DefinitionRef: RteEventToTaskMapping
+         RteActivationOffset: 0.0
+-        RtePositionInTask: 9
++        RtePositionInTask: 10
+         RteEventRef: /RcCar/AppLedControl/IB_LC/LedControl_timingEvent
+         RteMappedToTaskRef: /Ecu_CBO/Os/ECU_CBO_TASK_100ms
+         RteUsedOsAlarmRef: /Ecu_CBO/Os/ECU_CBO_ALARM_100ms
++    SWCI_CddSwState:
++      DefinitionRef: RteSwComponentInstance
++      RteSoftwareComponentInstanceRef: /RcCar/Composition_RcCar/CddSwState
++      IB_CSS_TimingEvent_SwState_500ms:
++        DefinitionRef: RteEventToTaskMapping
++        RteActivationOffset: 0.0
++        RtePositionInTask: 9
++        RteEventRef: /RcCar/CddSwState/IB_CSS/SwState_timingEvent
++        RteMappedToTaskRef: /Ecu_CBO/Os/ECU_CBO_TASK_100ms
++        RteUsedOsAlarmRef: /Ecu_CBO/Os/ECU_CBO_ALARM_100ms
+     RteOsInteraction:
+       RteUsedOsActivation1:
+         DefinitionRef: RteUsedOsActivation
+diff -uNr ecu_education_work_step1/swc-application/1ecu/ecu_cbo/Makefile ecu_education_work_step2/swc-application/1ecu/ecu_cbo/Makefile
+--- ecu_education_work_step1/swc-application/1ecu/ecu_cbo/Makefile	2023-06-06 03:14:34.729573400 +0900
++++ ecu_education_work_step2/swc-application/1ecu/ecu_cbo/Makefile	2023-06-06 03:15:47.526885900 +0900
+@@ -205,6 +205,7 @@
+ 	CddBodyControl \
+ 	CddController \
+ 	CddRcCar \
++	CddSwState \
+ 	AppLedControl \
+ 	OperationManager \
+ 	DriveManager \
+diff -uNr ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml
+--- ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:14:35.124601900 +0900
++++ ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:15:47.910091000 +0900
+@@ -1427,6 +1427,44 @@
+ 							</REQUIRED-COM-SPECS>
+ 							<REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/RcCar/IfLedBlink</REQUIRED-INTERFACE-TREF>
+ 						</R-PORT-PROTOTYPE>
++					</PORTS>
++					<INTERNAL-BEHAVIORS>
++						<SWC-INTERNAL-BEHAVIOR>
++							<SHORT-NAME>IB_CBL</SHORT-NAME>
++							<EVENTS>
++								<TIMING-EVENT>
++									<SHORT-NAME>LedBlinker_timingEvent</SHORT-NAME>
++									<START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/RcCar/CddLedBlinker/IB_CBL/LedBlinker</START-ON-EVENT-REF>
++									<PERIOD>0.5</PERIOD>
++								</TIMING-EVENT>
++							</EVENTS>
++							<HANDLE-TERMINATION-AND-RESTART>NO-SUPPORT</HANDLE-TERMINATION-AND-RESTART>
++							<RUNNABLES>
++								<RUNNABLE-ENTITY>
++									<SHORT-NAME>LedBlinker</SHORT-NAME>
++									<MINIMUM-START-INTERVAL>0.0</MINIMUM-START-INTERVAL>
++									<CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
++									<DATA-RECEIVE-POINT-BY-ARGUMENTS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME>dataReceivePoint_CddLedBlinker_LedBlinkIn_state</SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/RcCar/CddLedBlinker/LedBlinkIn</PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfLedBlink/state</TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++									</DATA-RECEIVE-POINT-BY-ARGUMENTS>
++									<SYMBOL>LedBlinker</SYMBOL>
++								</RUNNABLE-ENTITY>
++							</RUNNABLES>
++							<SUPPORTS-MULTIPLE-INSTANTIATION>false</SUPPORTS-MULTIPLE-INSTANTIATION>
++						</SWC-INTERNAL-BEHAVIOR>
++					</INTERNAL-BEHAVIORS>
++				</COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
++				<COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
++					<SHORT-NAME>CddSwState</SHORT-NAME>
++					<PORTS>
+ 						<P-PORT-PROTOTYPE>
+ 							<SHORT-NAME>SwStateOut</SHORT-NAME>
+ 							<PROVIDED-COM-SPECS>
+@@ -1458,52 +1496,41 @@
+ 					</PORTS>
+ 					<INTERNAL-BEHAVIORS>
+ 						<SWC-INTERNAL-BEHAVIOR>
+-							<SHORT-NAME>IB_CBL</SHORT-NAME>
++							<SHORT-NAME>IB_CSS</SHORT-NAME>
+ 							<EVENTS>
+ 								<TIMING-EVENT>
+-									<SHORT-NAME>LedBlinker_timingEvent</SHORT-NAME>
+-									<START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/RcCar/CddLedBlinker/IB_CBL/LedBlinker</START-ON-EVENT-REF>
++									<SHORT-NAME>SwState_timingEvent</SHORT-NAME>
++									<START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/RcCar/CddSwState/IB_CSS/SwState</START-ON-EVENT-REF>
+ 									<PERIOD>0.5</PERIOD>
+ 								</TIMING-EVENT>
+ 							</EVENTS>
+ 							<HANDLE-TERMINATION-AND-RESTART>NO-SUPPORT</HANDLE-TERMINATION-AND-RESTART>
+ 							<RUNNABLES>
+ 								<RUNNABLE-ENTITY>
+-									<SHORT-NAME>LedBlinker</SHORT-NAME>
++									<SHORT-NAME>SwState</SHORT-NAME>
+ 									<MINIMUM-START-INTERVAL>0.0</MINIMUM-START-INTERVAL>
+ 									<CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
+-									<DATA-RECEIVE-POINT-BY-ARGUMENTS>
+-										<VARIABLE-ACCESS>
+-											<SHORT-NAME>dataReceivePoint_CddLedBlinker_LedBlinkIn_state</SHORT-NAME>
+-											<ACCESSED-VARIABLE>
+-												<AUTOSAR-VARIABLE-IREF>
+-													<PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/RcCar/CddLedBlinker/LedBlinkIn</PORT-PROTOTYPE-REF>
+-													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfLedBlink/state</TARGET-DATA-PROTOTYPE-REF>
+-												</AUTOSAR-VARIABLE-IREF>
+-											</ACCESSED-VARIABLE>
+-										</VARIABLE-ACCESS>
+-									</DATA-RECEIVE-POINT-BY-ARGUMENTS>
+ 									<DATA-SEND-POINTS>
+ 										<VARIABLE-ACCESS>
+-											<SHORT-NAME>dataSendPoint_CddLedBlinker_SwStateOut_dsw</SHORT-NAME>
++											<SHORT-NAME>dataSendPoint_CddSwState_SwStateOut_dsw</SHORT-NAME>
+ 											<ACCESSED-VARIABLE>
+ 												<AUTOSAR-VARIABLE-IREF>
+-													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddLedBlinker/SwStateOut</PORT-PROTOTYPE-REF>
++													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddSwState/SwStateOut</PORT-PROTOTYPE-REF>
+ 													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/dsw</TARGET-DATA-PROTOTYPE-REF>
+ 												</AUTOSAR-VARIABLE-IREF>
+ 											</ACCESSED-VARIABLE>
+ 										</VARIABLE-ACCESS>
+ 										<VARIABLE-ACCESS>
+-											<SHORT-NAME>dataSendPoint_CddLedBlinker_SwStateOut_psw</SHORT-NAME>
++											<SHORT-NAME>dataSendPoint_CddSwState_SwStateOut_psw</SHORT-NAME>
+ 											<ACCESSED-VARIABLE>
+ 												<AUTOSAR-VARIABLE-IREF>
+-													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddLedBlinker/SwStateOut</PORT-PROTOTYPE-REF>
++													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddSwState/SwStateOut</PORT-PROTOTYPE-REF>
+ 													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/RcCar/IfSwState/psw</TARGET-DATA-PROTOTYPE-REF>
+ 												</AUTOSAR-VARIABLE-IREF>
+ 											</ACCESSED-VARIABLE>
+ 										</VARIABLE-ACCESS>
+ 									</DATA-SEND-POINTS>
+-									<SYMBOL>LedBlinker</SYMBOL>
++									<SYMBOL>SwState</SYMBOL>
+ 								</RUNNABLE-ENTITY>
+ 							</RUNNABLES>
+ 							<SUPPORTS-MULTIPLE-INSTANTIATION>false</SUPPORTS-MULTIPLE-INSTANTIATION>
+@@ -1652,6 +1679,10 @@
+ 							<SHORT-NAME>AppLedControl</SHORT-NAME>
+ 							<TYPE-TREF DEST="APPLICATION-SW-COMPONENT-TYPE">/RcCar/AppLedControl</TYPE-TREF>
+ 						</SW-COMPONENT-PROTOTYPE>
++						<SW-COMPONENT-PROTOTYPE>
++							<SHORT-NAME>CddSwState</SHORT-NAME>
++							<TYPE-TREF DEST="COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE">/RcCar/CddSwState</TYPE-TREF>
++						</SW-COMPONENT-PROTOTYPE>
+ 					</COMPONENTS>
+ 					<CONNECTORS>
+ 						<ASSEMBLY-SW-CONNECTOR>
+@@ -1754,10 +1785,10 @@
+ 							</REQUESTER-IREF>
+ 						</ASSEMBLY-SW-CONNECTOR>
+ 						<ASSEMBLY-SW-CONNECTOR>
+-							<SHORT-NAME>CddLedBlinker_SwStateOut_to_AppLedControl_SwStateIn</SHORT-NAME>
++							<SHORT-NAME>CddSwState_SwStateOut_to_AppLedControl_SwStateIn</SHORT-NAME>
+ 							<PROVIDER-IREF>
+-								<CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/RcCar/Composition_RcCar/CddLedBlinker</CONTEXT-COMPONENT-REF>
+-								<TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddLedBlinker/SwStateOut</TARGET-P-PORT-REF>
++								<CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/RcCar/Composition_RcCar/CddSwState</CONTEXT-COMPONENT-REF>
++								<TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/RcCar/CddSwState/SwStateOut</TARGET-P-PORT-REF>
+ 							</PROVIDER-IREF>
+ 							<REQUESTER-IREF>
+ 								<CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/RcCar/Composition_RcCar/AppLedControl</CONTEXT-COMPONENT-REF>
+diff -uNr ecu_education_work_step1/swc-application/common/swcs/CddLedBlinker.c ecu_education_work_step2/swc-application/common/swcs/CddLedBlinker.c
+--- ecu_education_work_step1/swc-application/common/swcs/CddLedBlinker.c	2023-06-06 03:59:10.285488700 +0900
++++ ecu_education_work_step2/swc-application/common/swcs/CddLedBlinker.c	2023-06-06 03:15:47.951160500 +0900
+@@ -54,8 +54,6 @@
+ void
+ CddLedBlinkerInit(void)
+ {
+-	switch_dip_init();
+-	switch_push_init();
+ 	led_init();
+ }
+ 
+@@ -66,33 +64,8 @@
+ LedBlinker(void)
+ {
+ 	uint8	active_led_val = 0;
+-
+-	static IDT_Switch latch = 0; 
+-	IDT_Switch dsw_state = 0;
+-	IDT_Switch	psw_state = 0;
+ 	Std_ReturnType ret = 0;
+ 
+-	if ( latch == 0 )
+-	{
+-		/* DSW の値は一度だけ取得するため、ラッチでそれを保証する	*/
+-#if SIMULATE_ON_ATHRILL
+-		/* シミュレーションでは、DSW初期化で値がクリアされるため、	*/
+-		/* メモリファイルを次の瞬間に戻す仕組みが必要となる			*/
+-		/* ただし、仕組みが手間なので、ひとまずメモリ読出しで対応	*/
+-		dsw_state = (IDT_Switch)(*(uint8*)(0xFF305290));
+-#else
+-		dsw_state = (IDT_Switch)switch_dip_sense();
+-#endif
+-		latch = 1;
+-	}
+-
+-	psw_state = (IDT_Switch)switch_push_sense();
+-
+-	syslog_2(LOG_NOTICE, "LedBlinker:dsw psw:%02x %02x", dsw_state, psw_state );
+-
+-	ret = Rte_Write_SwStateOut_dsw( &dsw_state );
+-	ret += Rte_Write_SwStateOut_psw( &psw_state );
+-	
+ 	ret = Rte_Read_LedBlinkIn_state( (IDT_Led*) &active_led_val );
+ 	if (ret != 0)
+ 	{
+diff -uNr ecu_education_work_step1/swc-application/common/swcs/CddSwState.c ecu_education_work_step2/swc-application/common/swcs/CddSwState.c
+--- ecu_education_work_step1/swc-application/common/swcs/CddSwState.c	1970-01-01 09:00:00.000000000 +0900
++++ ecu_education_work_step2/swc-application/common/swcs/CddSwState.c	2023-06-06 03:15:47.962170600 +0900
+@@ -0,0 +1,95 @@
++/*
++ *  Copyright (C) 2023 by Daisuke YASUI, JAPAN
++ *
++ *  上記著作権者は，以下の(1)~(4)の条件を満たす場合に限り，本ソフトウェ
++ *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
++ *  変・再配布（以下，利用と呼ぶ）することを無償で許諾する．
++ *  (1) 本ソフトウェアをソースコードの形で利用する場合には，上記の著作
++ *      権表示，この利用条件および下記の無保証規定が，そのままの形でソー
++ *      スコード中に含まれていること．
++ *  (2) 本ソフトウェアを，ライブラリ形式など，他のソフトウェア開発に使
++ *      用できる形で再配布する場合には，再配布に伴うドキュメント（利用
++ *      者マニュアルなど）に，上記の著作権表示，この利用条件および下記
++ *      の無保証規定を掲載すること．
++ *  (3) 本ソフトウェアを，機器に組み込むなど，他のソフトウェア開発に使
++ *      用できない形で再配布する場合には，次のいずれかの条件を満たすこ
++ *      と．
++ *    (a) 再配布に伴うドキュメント（利用者マニュアルなど）に，上記の著
++ *        作権表示，この利用条件および下記の無保証規定を掲載すること．
++ *    (b) 再配布の形態を，別に定める方法によって，TOPPERSプロジェクトに
++ *        報告すること．
++ *  (4) 本ソフトウェアの利用により直接的または間接的に生じるいかなる損
++ *      害からも，上記著作権者およびTOPPERSプロジェクトを免責すること．
++ *      また，本ソフトウェアのユーザまたはエンドユーザからのいかなる理
++ *      由に基づく請求からも，上記著作権者およびTOPPERSプロジェクトを
++ *      免責すること．
++ *
++ *  本ソフトウェアは，AUTOSAR（AUTomotive Open System ARchitecture）仕
++ *  様に基づいている．上記の許諾は，AUTOSARの知的財産権を許諾するもので
++ *  はない．AUTOSARは，AUTOSAR仕様に基づいたソフトウェアを商用目的で利
++ *  用する者に対して，AUTOSARパートナーになることを求めている．
++ *  
++ *  本ソフトウェアは，無保証で提供されているものである．上記著作権者お
++ *  よびTOPPERSプロジェクトは，本ソフトウェアに関して，特定の使用目的
++ *  に対する適合性も含めて，いかなる保証も行わない．また，本ソフトウェ
++ *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
++ *  の責任を負わない．
++ */  
++
++/*
++ *  CDD SW-C CddSwState 動作用ヘッダ
++ */
++#include "Rte_CddSwState.h"
++#include "ModelCarControl.h"
++#include "t_syslog.h"
++
++
++/*
++ *  CDD SW-C CddSwState 初期化
++ */
++void
++CddSwStateInit(void)
++{
++
++	switch_dip_init();
++	switch_push_init();
++
++}
++
++/*
++ *  RunnableEntity
++ */
++void
++SwState(void)
++{
++	static IDT_Switch dsw_state = 0;
++	static IDT_Switch latch = 0; 
++	IDT_Switch	psw_state = 0;
++	Std_ReturnType ret = 0;
++
++	if ( latch == 0 )
++	{
++		/* DSW の値は一度だけ取得するため、ラッチでそれを保証する	*/
++#if SIMULATE_ON_ATHRILL
++		/* シミュレーションでは、DSW初期化で値がクリアされるため、	*/
++		/* メモリファイルを次の瞬間に戻す仕組みが必要となる			*/
++		/* ただし、仕組みが手間なので、ひとまずメモリ読出しで対応	*/
++		dsw_state = (IDT_Switch)(*(uint8*)(0xFF305290));
++#else
++		dsw_state = (IDT_Switch)switch_dip_sense();
++#endif
++		syslog_1(LOG_NOTICE, "SwState:dsw:%02x", dsw_state );
++		latch = 1;
++	}
++
++	psw_state = (IDT_Switch)switch_push_sense();
++
++	/* 取得結果の出力	*/
++	ret = Rte_Write_SwStateOut_dsw( dsw_state );
++	ret += Rte_Write_SwStateOut_psw( psw_state );
++
++	if ( ret != 0 )
++	{
++		syslog_0(LOG_ERROR, "SwStateOut error" );
++	}
++}

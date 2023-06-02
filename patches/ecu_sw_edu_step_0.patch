@@ -1,5 +1,60 @@
---- modelcar/swc-application/common/swcs/CddLedBlinker.c	2015-07-17 10:31:28.000000000 +0900
-+++ modelcar/swc-application/common/swcs/CddLedBlinker_step0.c	2023-02-26 23:25:17.628705400 +0900
+diff -uNr ecu_education_work_initial/swc-application/EcuM/EcuM_Callout.h ecu_education_work_step0/swc-application/EcuM/EcuM_Callout.h
+--- ecu_education_work_initial/swc-application/EcuM/EcuM_Callout.h	2023-06-06 03:12:40.499240600 +0900
++++ ecu_education_work_step0/swc-application/EcuM/EcuM_Callout.h	2023-06-06 03:13:42.568621400 +0900
+@@ -73,10 +73,10 @@
+ 	print_banner();
+ }
+ 
+-#define ALARM_TICK_125US	1000U
+-#define ALARM_TICK_10MS		80000U
+-#define ALARM_TICK_20MS		160000U
+-#define ALARM_TICK_100MS	800000U
++#define ALARM_TICK_125US	200000U
++#define ALARM_TICK_10MS		20000U
++#define ALARM_TICK_20MS		40000U
++#define ALARM_TICK_100MS	200000U
+ 
+ LOCAL_INLINE void
+ EcuM_BswStartupTwo(void)
+diff -uNr ecu_education_work_initial/swc-application/common/swcs/CddController.c ecu_education_work_step0/swc-application/common/swcs/CddController.c
+--- ecu_education_work_initial/swc-application/common/swcs/CddController.c	2023-06-06 03:12:40.549148000 +0900
++++ ecu_education_work_step0/swc-application/common/swcs/CddController.c	2023-06-06 03:13:42.617034500 +0900
+@@ -131,6 +131,24 @@
+ {
+ 	uint8 c;
+ 
++#if SIMULATE_ON_ATHRILL
++	g_rcb3_rmsg[0] = (*(uint8*)(0xFF305288));
++	g_rcb3_rmsg[1] = (*(uint8*)(0xFF305289));
++	g_rcb3_rmsg[2] = (*(uint8*)(0xFF30528A));
++	g_rcb3_rmsg[3] = (*(uint8*)(0xFF30528B));
++	g_rcb3_rmsg[4] = (*(uint8*)(0xFF30528C));
++	g_rcb3_rmsg[5] = (*(uint8*)(0xFF30528D));
++	g_rcb3_rmsg[6] = (*(uint8*)(0xFF30528E));
++	g_rcb3_rmsg[7] = (*(uint8*)(0xFF30528F));
++
++	RCB3CommandData = (IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_BUTTON_L];         /* ボタン情報1 */
++	RCB3CommandData += ((IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_BUTTON_H]) << 8U;/* ボタン情報2 */
++	RCB3CommandData += ((IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_L_ANALOG_LR]) << 16U;  /* アナログ1 */
++	RCB3CommandData += ((IDT_RCB3) g_rcb3_rmsg[RCB3_MSG_OFFSET_R_ANALOG_UD]) << 24U;  /* アナログ4 */
++	/*syslog_1(LOG_NOTICE, "MessageParser:%08x", RCB3CommandData);*/
++	RCB3CommandGotFlg = FALSE;
++	rx_mode = RX_MODE_INIT;
++#else
+ 	while (tReceiveSBDBTUart(&c, 1)) {
+ 		switch (rx_mode) {
+ 		case RX_MODE_INIT:
+@@ -175,6 +193,7 @@
+ #endif /* TOPPERS_WITH_DISP */
+ 		}
+ 	}
++#endif
+ }
+ 
+ /*
+diff -uNr ecu_education_work_initial/swc-application/common/swcs/CddLedBlinker.c ecu_education_work_step0/swc-application/common/swcs/CddLedBlinker.c
+--- ecu_education_work_initial/swc-application/common/swcs/CddLedBlinker.c	2023-06-06 03:12:40.560691700 +0900
++++ ecu_education_work_step0/swc-application/common/swcs/CddLedBlinker.c	2023-06-06 03:57:22.069416400 +0900
 @@ -46,6 +46,7 @@
  
  #include "Rte_CddLedBlinker.h"
@@ -8,23 +63,30 @@
  
  /*
   *  CDD SW-C CddLedBlinker用の初期化
-@@ -54,6 +55,8 @@
+@@ -53,6 +54,8 @@
+ void
  CddLedBlinkerInit(void)
  {
- 	led_init();
 +	switch_dip_init();
 +	switch_push_init();
+ 	led_init();
  }
  
- /*
-@@ -65,7 +68,32 @@
+@@ -65,19 +68,50 @@
  	static uint8	active_led_val = LED1;
  	static boolean	active_led_up  = TRUE;
  
 -	led_out(active_led_val);
+-
+-	if(active_led_val == LED4){
+-		active_led_up = FALSE;
+-	}
+-	if(active_led_val == LED1){
+-		active_led_up = TRUE;
 +	static IDT_Switch dsw_state = 0;
 +	static IDT_Switch latch = 0; 
 +	IDT_Switch	psw_state = 0;
++	Std_ReturnType ret = 0;
 +
 +	if ( latch == 0 )
 +	{
@@ -37,17 +99,37 @@
 +#else
 +		dsw_state = (IDT_Switch)switch_dip_sense();
 +#endif
-+		syslog_1(LOG_NOTICE, "SwState:dsw:%02x", dsw_state );
++		syslog_1(LOG_NOTICE, "LedBlinker:dsw:%02x", dsw_state );
 +		latch = 1;
-+	}
-+
+ 	}
+ 
+-	if(active_led_up == TRUE){
+-		active_led_val = active_led_val << 1;
 +	psw_state = (IDT_Switch)switch_push_sense();
 +
-+	syslog_2(LOG_NOTICE, "LedBlinker:dsw psw:%02x %02x", dsw, psw );
-+	if ( dsw == 0 && psw == 0 ) {	/* dsw がすべて off かつ psw が off */
++	syslog_2(LOG_NOTICE, "LedBlinker:dsw psw:%02x %02x", dsw_state, psw_state );
++	if ( dsw_state == 0 && psw_state == 0 ) {	/* dsw がすべて off かつ psw が off */
 +		led_out(active_led_val);
-+	}
++
++		if(active_led_val == LED4){
++			active_led_up = FALSE;
++		}
++		if(active_led_val == LED1){
++			active_led_up = TRUE;
++		}
++
++		if(active_led_up == TRUE){
++			active_led_val = active_led_val << 1;
++		}
++		else {
++			active_led_val = active_led_val >> 1;
++		}
+ 	}
+ 	else {
+-		active_led_val = active_led_val >> 1;
++		led_out(0);
+ 	}
++#if SIMULATE_ON_ATHRILL
 +	syslog_1(LOG_NOTICE, "LedBlinker:State:%02x", (*(uint8*)(0xffc10020)));
- 
- 	if(active_led_val == LED4){
- 		active_led_up = FALSE;
++#endif
+ }
