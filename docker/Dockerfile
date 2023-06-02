@@ -123,4 +123,4 @@ RUN echo "MMAP, 0xFFE30000, mmap4.bin" >> memory.txt
 RUN echo "MMAP, 0xFF305288, mmap5.bin" >> memory.txt
 RUN for i in {0..255}; do echo -en "\xff\xff\xff\xff" >> mmap1.bin ; done
 RUN for i in {2..5}; do cp mmap1.bin mmap$i.bin; done
-RUN sed -i -E "s:DEBUG_FUNC_ENABLE_SKIP_CLOCK    1:DEBUG_FUNC_ENABLE_SKIP_CLOCK    0" device_config.txt
+RUN sed -i -E "s:DEBUG_FUNC_ENABLE_SKIP_CLOCK    1:DEBUG_FUNC_ENABLE_SKIP_CLOCK    0:g" device_config.txt
