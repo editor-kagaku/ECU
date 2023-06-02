@@ -112,6 +112,7 @@ RUN echo ABREX_DIR=\$OS_DIR/utils/abrex >> abrex.sh
 RUN echo APP_NAME=Ecuc_CBO >> abrex.sh
 RUN echo ruby \$ABREX_DIR/abrex.rb ./\$APP_NAME.yaml -e /System/RcCar >> abrex.sh
 RUN chmod +x abrex.sh
+
 RUN cp /opt/athrill/athrill-target-rh850f1x/params/rh850f1k/atk2-sc1/*.txt .
 #以下がPORTBASE
 RUN echo "MMAP, 0xFFC10000, mmap1.bin" >> memory.txt
@@ -119,5 +120,7 @@ RUN echo "MMAP, 0xFFCE5000, mmap2.bin" >> memory.txt
 RUN echo "MMAP, 0xFFCF0000, mmap3.bin" >> memory.txt
 #以下がTAUBBASE
 RUN echo "MMAP, 0xFFE30000, mmap4.bin" >> memory.txt
+RUN echo "MMAP, 0xFF305288, mmap5.bin" >> memory.txt
 RUN for i in {0..255}; do echo -en "\xff\xff\xff\xff" >> mmap1.bin ; done
-RUN for i in {2..4}; do cp mmap1.bin mmap$i.bin; done
+RUN for i in {2..5}; do cp mmap1.bin mmap$i.bin; done
+RUN sed -i -E "s:DEBUG_FUNC_ENABLE_SKIP_CLOCK    1:DEBUG_FUNC_ENABLE_SKIP_CLOCK    0" device_config.txt

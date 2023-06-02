@@ -47,24 +47,6 @@ diff -ur modelcar/swc-application/1ecu/ecu_cbo/memory.txt modelcar/swc-applicati
 +MMAP, 0xFFCF0000, mmap3.bin
 +MMAP, 0xFFE30000, mmap4.bin
 +MMAP, 0xFF305288, mmap5.bin
-diff -ur modelcar/swc-application/EcuM/EcuM_Callout.h modelcar/swc-application/EcuM/EcuM_Callout.h
---- modelcar/swc-application/EcuM/EcuM_Callout.h	2015-07-17 10:31:28.000000000 +0900
-+++ modelcar/swc-application/EcuM/EcuM_Callout.h	2023-02-22 20:37:35.192825300 +0900
-@@ -73,10 +73,10 @@
- 	print_banner();
- }
- 
--#define ALARM_TICK_125US	1000U
--#define ALARM_TICK_10MS		80000U
--#define ALARM_TICK_20MS		160000U
--#define ALARM_TICK_100MS	800000U
-+#define ALARM_TICK_125US	200000U
-+#define ALARM_TICK_10MS		20000U
-+#define ALARM_TICK_20MS		40000U
-+#define ALARM_TICK_100MS	200000U
- 
- LOCAL_INLINE void
- EcuM_BswStartupTwo(void)
 diff -ur modelcar/swc-application/common/arxmls/RcCar.arxml modelcar/swc-application/common/arxmls/RcCar.arxml
 --- modelcar/swc-application/common/arxmls/RcCar.arxml	2015-07-17 10:31:28.000000000 +0900
 +++ modelcar/swc-application/common/arxmls/RcCar.arxml	2015-07-17 10:31:28.000000000 +0900
