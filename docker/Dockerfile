@@ -1,28 +1,45 @@
-FROM ubuntu:20.04 as modelcar-on-athrill
+FROM ros:melodic as modelcar-on-athrill
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-c"]
+
+RUN sed -i.bak -e 's%http://[^ ]\+%mirror://mirrors.ubuntu.com/mirrors.txt%g' /etc/apt/sources.list
 
 RUN apt-get update && \
     apt-get install -y \
         wget \
         git \
         unzip \
+        curl \
         subversion \
         build-essential \
         lib32z1 \
         lib32stdc++6 \
-        openjdk-8-jdk-headless \
+        openjdk-8-jre \
         ruby
 
 WORKDIR /opt/athrill
-RUN wget https://github.com/toppers/athrill-gcc-v850e2m/releases/download/v1.0/athrill-gcc-package.tar.gz
-RUN tar zxf athrill-gcc-package.tar.gz
-RUN tar zxf /opt/athrill/athrill-gcc-package/athrill-gcc.tar.gz
-RUN mv usr/local/athrill-gcc /opt/athrill
-RUN git clone --depth 1 https://github.com/toppers/athrill-target-rh850f1x.git
+RUN wget https://github.com/toppers/athrill-gcc-v850e2m/releases/download/v1.1/athrill-gcc-package.tar.gz && \
+    tar zxf athrill-gcc-package.tar.gz && \
+    tar zxf /opt/athrill/athrill-gcc-package/athrill-gcc.tar.gz && \
+    mv usr/local/athrill-gcc /opt/athrill && \
+    mkdir athrill-target-rh850f1x
 
+##RUN git clone --depth 1 https://github.com/toppers/athrill-target-rh850f1x.git
+#RUN git clone --recursive https://github.com/toppers/athrill-target-rh850f1x.git
+
+#WORKDIR /root/athrill-target-rh850f1x
+#RUN git checkout b696a95aed3d02ec49bb629dc03068cc3fdc568e
+#RUN git reset --hard
 
 WORKDIR /opt/athrill/athrill-target-rh850f1x
+RUN git init
+RUN git remote add origin https://github.com/toppers/athrill-target-rh850f1x.git
+RUN git fetch origin b696a95aed3d02ec49bb629dc03068cc3fdc568e
+RUN git reset --hard FETCH_HEAD
+
+#WORKDIR /opt/athrill/athrill-target-rh850f1x
 RUN rm -rf athrill
 RUN git clone --depth 1 https://github.com/toppers/athrill.git
 
@@ -60,7 +77,9 @@ RUN wget https://toppers.jp/download.cgi/cfg-linux-static-1_9_6.gz
 RUN gunzip cfg-linux-static-1_9_6.gz
 RUN mv cfg-linux-static-1_9_6 cfg
 RUN chmod +x cfg
-RUN wget https://www.autosar.org/fileadmin/user_upload/standards/classic/4-0/AUTOSAR_MMOD_XMLSchema.zip
+#TODO 以下は、一時的な措置のため、AUTOSAR で再公開の際に、改めてダウンロード先を変更すること
+#RUN wget https://www.autosar.org/fileadmin/user_upload/standards/classic/4-0/AUTOSAR_MMOD_XMLSchema.zip
+COPY ../tools/AUTOSAR_MMOD_XMLSchema.zip .
 RUN unzip AUTOSAR_MMOD_XMLSchema.zip
 
 WORKDIR /root/modelcar/atk2-sc1/target/hsbrh850f1k_gcc
