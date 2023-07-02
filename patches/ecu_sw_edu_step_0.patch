@@ -1,3 +1,45 @@
+diff -uNr ecu_education_work_initial/swc-application/1ecu/ecu_cbo/Makefile ecu_education_work_step0/swc-application/1ecu/ecu_cbo/Makefile
+--- ecu_education_work_initial/swc-application/1ecu/ecu_cbo/Makefile	2023-06-06 03:12:40.112664800 +0900
++++ ecu_education_work_step0/swc-application/1ecu/ecu_cbo/Makefile	2023-07-04 04:24:28.888474100 +0900
+@@ -191,7 +191,7 @@
+ ifndef OMIT_OPTIMIZATION
+   COPTS := $(COPTS) -O2
+ endif
+-USER_MACRO = -DTOPPERS_NO_USE_SCHM -DTOPPERS_NO_USE_COMSTACK -DTOPPERS_USE_BODY -DTOPPERS_USE_OPERATION -DTOPPERS_USE_CONTROL
++USER_MACRO = -DTOPPERS_NO_USE_SCHM -DTOPPERS_NO_USE_COMSTACK -DTOPPERS_USE_BODY -DTOPPERS_USE_OPERATION -DTOPPERS_USE_CONTROL -DSIMULATE_ON_ATHRILL
+ CDEFS := $(CDEFS)  $(USER_MACRO)
+ INCLUDES := -I. -I$(SRCDIR)/include -I$(SRCDIR)/arch -I$(SRCDIR) $(INCLUDES)
+ LDFLAGS := $(LDFLAGS) 
+diff -uNr ecu_education_work_initial/swc-application/1ecu/ecu_cbo/device_config.txt ecu_education_work_step0/swc-application/1ecu/ecu_cbo/device_config.txt
+--- ecu_education_work_initial/swc-application/1ecu/ecu_cbo/device_config.txt	2023-06-06 03:12:40.136663100 +0900
++++ ecu_education_work_step0/swc-application/1ecu/ecu_cbo/device_config.txt	2023-07-04 05:09:06.425864300 +0900
+@@ -3,4 +3,4 @@
+ DEBUG_FUNC_ENABLE_BT		1
+ DEBUG_FUNC_ENABLE_PROF		1
+ DEBUG_FUNC_ENABLE_WATCH		1
+-DEBUG_FUNC_ENABLE_SKIP_CLOCK    1
++DEBUG_FUNC_ENABLE_SKIP_CLOCK    0
+diff -uNr ecu_education_work_initial/swc-application/1ecu/ecu_cbo/device_config_with_can.txt ecu_education_work_step0/swc-application/1ecu/ecu_cbo/device_config_with_can.txt
+--- ecu_education_work_initial/swc-application/1ecu/ecu_cbo/device_config_with_can.txt	2023-06-06 03:12:40.139663100 +0900
++++ ecu_education_work_step0/swc-application/1ecu/ecu_cbo/device_config_with_can.txt	2023-07-04 05:08:56.976744000 +0900
+@@ -3,7 +3,7 @@
+ DEBUG_FUNC_ENABLE_BT		1
+ DEBUG_FUNC_ENABLE_PROF		1
+ DEBUG_FUNC_ENABLE_WATCH		1
+-DEBUG_FUNC_ENABLE_SKIP_CLOCK    1
++DEBUG_FUNC_ENABLE_SKIP_CLOCK    0
+ DEBUG_FUNC_ENABLE_CAN      1
+ DEVICE_CONFIG_CAN_FD		100000
+ DEBUG_FUNC_CAN_RX_QUEUE_SIZE	256
+diff -uNr ecu_education_work_initial/swc-application/1ecu/ecu_cbo/memory.txt ecu_education_work_step0/swc-application/1ecu/ecu_cbo/memory.txt
+--- ecu_education_work_initial/swc-application/1ecu/ecu_cbo/memory.txt	2023-06-06 03:12:40.150683700 +0900
++++ ecu_education_work_step0/swc-application/1ecu/ecu_cbo/memory.txt	2023-06-06 03:13:42.229902400 +0900
+@@ -4,3 +4,4 @@
+ MMAP, 0xFFCE5000, mmap2.bin
+ MMAP, 0xFFCF0000, mmap3.bin
+ MMAP, 0xFFE30000, mmap4.bin
++MMAP, 0xFF305288, mmap5.bin
+\ No newline at end of file
 diff -uNr ecu_education_work_initial/swc-application/EcuM/EcuM_Callout.h ecu_education_work_step0/swc-application/EcuM/EcuM_Callout.h
 --- ecu_education_work_initial/swc-application/EcuM/EcuM_Callout.h	2023-06-06 03:12:40.499240600 +0900
 +++ ecu_education_work_step0/swc-application/EcuM/EcuM_Callout.h	2023-06-06 03:13:42.568621400 +0900
