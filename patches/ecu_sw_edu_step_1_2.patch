@@ -9,7 +9,7 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +					<IS-SERVICE>false</IS-SERVICE>
 +					<DATA-ELEMENTS>
 +						<VARIABLE-DATA-PROTOTYPE>
-+							<SHORT-NAME>dsw</SHORT-NAME>
++							<SHORT-NAME></SHORT-NAME>
 +							<SW-DATA-DEF-PROPS>
 +								<SW-DATA-DEF-PROPS-VARIANTS>
 +									<SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -20,7 +20,7 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +							<TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE"></TYPE-TREF>
 +						</VARIABLE-DATA-PROTOTYPE>
 +						<VARIABLE-DATA-PROTOTYPE>
-+							<SHORT-NAME>psw</SHORT-NAME>
++							<SHORT-NAME></SHORT-NAME>
 +							<SW-DATA-DEF-PROPS>
 +								<SW-DATA-DEF-PROPS-VARIANTS>
 +									<SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -37,7 +37,7 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +					<IS-SERVICE>false</IS-SERVICE>
 +					<DATA-ELEMENTS>
 +						<VARIABLE-DATA-PROTOTYPE>
-+							<SHORT-NAME>state</SHORT-NAME>
++							<SHORT-NAME></SHORT-NAME>
 +							<SW-DATA-DEF-PROPS>
 +								<SW-DATA-DEF-PROPS-VARIANTS>
 +									<SW-DATA-DEF-PROPS-CONDITIONAL>

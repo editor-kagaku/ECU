@@ -20,7 +20,7 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +									<INIT-VALUE>
 +										<NUMERICAL-VALUE-SPECIFICATION>
 +											<SHORT-LABEL></SHORT-LABEL>
-+											<VALUE>0</VALUE>
++											<VALUE></VALUE>
 +										</NUMERICAL-VALUE-SPECIFICATION>
 +									</INIT-VALUE>
 +								</NONQUEUED-RECEIVER-COM-SPEC>
@@ -37,7 +37,7 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +									<INIT-VALUE>
 +										<NUMERICAL-VALUE-SPECIFICATION>
 +											<SHORT-LABEL></SHORT-LABEL>
-+											<VALUE>0</VALUE>
++											<VALUE></VALUE>
 +										</NUMERICAL-VALUE-SPECIFICATION>
 +									</INIT-VALUE>
 +								</NONQUEUED-SENDER-COM-SPEC>
@@ -48,7 +48,7 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +									<INIT-VALUE>
 +										<NUMERICAL-VALUE-SPECIFICATION>
 +											<SHORT-LABEL></SHORT-LABEL>
-+											<VALUE>0</VALUE>
++											<VALUE></VALUE>
 +										</NUMERICAL-VALUE-SPECIFICATION>
 +									</INIT-VALUE>
 +								</NONQUEUED-SENDER-COM-SPEC>
