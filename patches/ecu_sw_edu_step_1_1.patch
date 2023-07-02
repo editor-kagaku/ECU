@@ -1,0 +1,21 @@
+diff -uNr ecu_education_work_step0/swc-application/common/arxmls/DataTypes.arxml ecu_education_work_step1/swc-application/common/arxmls/DataTypes.arxml
+--- ecu_education_work_step0/swc-application/common/arxmls/DataTypes.arxml	2023-06-06 03:13:42.592310700 +0900
++++ ecu_education_work_step1/swc-application/common/arxmls/DataTypes.arxml	2023-06-06 03:14:35.121601400 +0900
+@@ -181,6 +181,17 @@
+ 						</SW-DATA-DEF-PROPS-VARIANTS>
+ 					</SW-DATA-DEF-PROPS>
+ 				</IMPLEMENTATION-DATA-TYPE>
++				<IMPLEMENTATION-DATA-TYPE>
++					<SHORT-NAME></SHORT-NAME>
++					<CATEGORY>VALUE</CATEGORY>
++					<SW-DATA-DEF-PROPS>
++						<SW-DATA-DEF-PROPS-VARIANTS>
++							<SW-DATA-DEF-PROPS-CONDITIONAL>
++								<BASE-TYPE-REF DEST="SW-BASE-TYPE"></BASE-TYPE-REF>
++							</SW-DATA-DEF-PROPS-CONDITIONAL>
++						</SW-DATA-DEF-PROPS-VARIANTS>
++					</SW-DATA-DEF-PROPS>
++				</IMPLEMENTATION-DATA-TYPE>
+ 			</ELEMENTS>
+ 		</AR-PACKAGE>
+ 	</AR-PACKAGES>

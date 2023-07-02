@@ -1,0 +1,41 @@
+diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml
+--- ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:13:42.596891800 +0900
++++ ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml	2023-07-04 04:48:36.593558200 +0900
+@@ -1376,6 +1472,37 @@
+ 									<SHORT-NAME>LedBlinker</SHORT-NAME>
+ 									<MINIMUM-START-INTERVAL>0.0</MINIMUM-START-INTERVAL>
+ 									<CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
++									<DATA-RECEIVE-POINT-BY-ARGUMENTS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME></SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE"></PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE"></TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++									</DATA-RECEIVE-POINT-BY-ARGUMENTS>
++									<DATA-SEND-POINTS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME></SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE"></PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE"></TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++										<VARIABLE-ACCESS>
++											<SHORT-NAME></SHORT-NAME>
++											<ACCESSED-VARIABLE>
++												<AUTOSAR-VARIABLE-IREF>
++													<PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE"></PORT-PROTOTYPE-REF>
++													<TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE"></TARGET-DATA-PROTOTYPE-REF>
++												</AUTOSAR-VARIABLE-IREF>
++											</ACCESSED-VARIABLE>
++										</VARIABLE-ACCESS>
++									</DATA-SEND-POINTS>
+ 									<SYMBOL>LedBlinker</SYMBOL>
+ 								</RUNNABLE-ENTITY>
+ 							</RUNNABLES>

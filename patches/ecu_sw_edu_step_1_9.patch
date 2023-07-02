@@ -1,0 +1,14 @@
+diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml
+--- ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:13:42.596891800 +0900
++++ ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml	2023-07-04 04:48:36.593558200 +0900
+@@ -1410,6 +1648,10 @@
+ 							<SHORT-NAME>CddLedBlinker</SHORT-NAME>
+ 							<TYPE-TREF DEST="COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE">/RcCar/CddLedBlinker</TYPE-TREF>
+ 						</SW-COMPONENT-PROTOTYPE>
++						<SW-COMPONENT-PROTOTYPE>
++							<SHORT-NAME></SHORT-NAME>
++							<TYPE-TREF DEST="APPLICATION-SW-COMPONENT-TYPE"></TYPE-TREF>
++						</SW-COMPONENT-PROTOTYPE>
+ 					</COMPONENTS>
+ 					<CONNECTORS>
+ 						<ASSEMBLY-SW-CONNECTOR>
