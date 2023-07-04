@@ -1,0 +1,14 @@
+diff -uNr ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml
+--- ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:14:35.124601900 +0900
++++ ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:15:47.910091000 +0900
+@@ -1652,6 +1679,10 @@
+ 							<SHORT-NAME>AppLedControl</SHORT-NAME>
+ 							<TYPE-TREF DEST="APPLICATION-SW-COMPONENT-TYPE">/RcCar/AppLedControl</TYPE-TREF>
+ 						</SW-COMPONENT-PROTOTYPE>
++						<SW-COMPONENT-PROTOTYPE>
++							<SHORT-NAME>CddSwState</SHORT-NAME>
++							<TYPE-TREF DEST="COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE">/RcCar/CddSwState</TYPE-TREF>
++						</SW-COMPONENT-PROTOTYPE>
+ 					</COMPONENTS>
+ 					<CONNECTORS>
+ 						<ASSEMBLY-SW-CONNECTOR>

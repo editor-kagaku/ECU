@@ -1,0 +1,40 @@
+diff -uNr ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml
+--- ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:14:35.124601900 +0900
++++ ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:15:47.910091000 +0900
+@@ -1464,6 +1464,36 @@
+				</COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
+				<COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
+					<SHORT-NAME>CddSwState</SHORT-NAME>
++					<PORTS>
++						<P-PORT-PROTOTYPE>
++							<SHORT-NAME></SHORT-NAME>
++							<PROVIDED-COM-SPECS>
++								<NONQUEUED-SENDER-COM-SPEC>
++									<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE"></DATA-ELEMENT-REF>
++									<HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
++									<USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
++									<INIT-VALUE>
++										<NUMERICAL-VALUE-SPECIFICATION>
++											<SHORT-LABEL></SHORT-LABEL>
++											<VALUE></VALUE>
++										</NUMERICAL-VALUE-SPECIFICATION>
++									</INIT-VALUE>
++								</NONQUEUED-SENDER-COM-SPEC>
++								<NONQUEUED-SENDER-COM-SPEC>
++									<DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE"></DATA-ELEMENT-REF>
++									<HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
++									<USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
++									<INIT-VALUE>
++										<NUMERICAL-VALUE-SPECIFICATION>
++											<SHORT-LABEL></SHORT-LABEL>
++											<VALUE></VALUE>
++										</NUMERICAL-VALUE-SPECIFICATION>
++									</INIT-VALUE>
++								</NONQUEUED-SENDER-COM-SPEC>
++							</PROVIDED-COM-SPECS>
++							<PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE"></PROVIDED-INTERFACE-TREF>
++						</P-PORT-PROTOTYPE>
++					</PORTS>
+				</COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
+				<APPLICATION-SW-COMPONENT-TYPE>
+					<SHORT-NAME>AppLedControl</SHORT-NAME>

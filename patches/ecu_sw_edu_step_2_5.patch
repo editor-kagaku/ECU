@@ -1,0 +1,32 @@
+diff -uNr ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml
+--- ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:14:35.124601900 +0900
++++ ecu_education_work_step2/swc-application/common/arxmls/RcCar.arxml	2023-06-06 03:15:47.910091000 +0900
+@@ -1494,6 +1494,28 @@
+							<PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/RcCar/IfSwState</PROVIDED-INTERFACE-TREF>
+						</P-PORT-PROTOTYPE>
+					</PORTS>
++					<INTERNAL-BEHAVIORS>
++						<SWC-INTERNAL-BEHAVIOR>
++							<SHORT-NAME></SHORT-NAME>
++							<EVENTS>
++								<TIMING-EVENT>
++									<SHORT-NAME></SHORT-NAME>
++									<START-ON-EVENT-REF DEST="RUNNABLE-ENTITY"></START-ON-EVENT-REF>
++									<PERIOD></PERIOD>
++								</TIMING-EVENT>
++							</EVENTS>
++							<HANDLE-TERMINATION-AND-RESTART>NO-SUPPORT</HANDLE-TERMINATION-AND-RESTART>
++							<RUNNABLES>
++								<RUNNABLE-ENTITY>
++									<SHORT-NAME></SHORT-NAME>
++									<MINIMUM-START-INTERVAL>0.0</MINIMUM-START-INTERVAL>
++									<CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
++									<SYMBOL></SYMBOL>
++								</RUNNABLE-ENTITY>
++							</RUNNABLES>
++							<SUPPORTS-MULTIPLE-INSTANTIATION>false</SUPPORTS-MULTIPLE-INSTANTIATION>
++						</SWC-INTERNAL-BEHAVIOR>
++					</INTERNAL-BEHAVIORS>
+				</COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE>
+				<APPLICATION-SW-COMPONENT-TYPE>
+					<SHORT-NAME>AppLedControl</SHORT-NAME>
