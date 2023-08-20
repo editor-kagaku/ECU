@@ -196,7 +196,7 @@ diff -uNr modelcar/swc-application/common/swcs/CddLedBlinker.c ecu_education_wor
 +		/* シミュレーションでは、DSW初期化で値がクリアされるため、	*/
 +		/* メモリファイルを次の瞬間に戻す仕組みが必要となる			*/
 +		/* ただし、仕組みが手間なので、ひとまずメモリ読出しで対応	*/
-+		dsw_state = (IDT_Switch)(((((*(uint32*)(0xFF305288)) >> 16) & 0x00ff ) & 0x80) ? 0 : 1);
++		dsw_state = (IDT_Switch)(((*(uint8*)(0xFF305290)) & 0x80) ? 0 : 1);
 +#else
 +		dsw_state = (IDT_Switch)switch_dip_sense();
 +#endif

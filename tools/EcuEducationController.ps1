@@ -101,19 +101,19 @@ $DswBtn_Click = {
         $DswBtn.Text = "DipSW ON"
         $Bin = 0
     }
-    $CMD = "echo -en '\x" + $Bin.ToString("X2") + "' | dd of=" + $global:TargetMemFolder + "/mmap5.bin bs=1 seek=2 count=1 conv=notrunc 2>/dev/null"
+    $CMD = "echo -en '\x" + $Bin.ToString("X2") + "' | dd of=" + $global:TargetMemFolder + "/mmap5.bin bs=1 seek=8 count=1 conv=notrunc 2>/dev/null"
     #Write-Host $CMD
     wsl docker exec $SelectInstance bash -c $CMD
 }
 $DswBtn.Add_Click($DswBtn_Click)
 
 $Bin = 128  #デフォルトはOFF
-$CMD = "echo -en '\x" + $Bin.ToString("X2") + "' | dd of=" + $global:TargetMemFolder + "/mmap5.bin bs=1 seek=2 count=1 conv=notrunc 2>/dev/null"
+$CMD = "echo -en '\x" + $Bin.ToString("X2") + "' | dd of=" + $global:TargetMemFolder + "/mmap5.bin bs=1 seek=8 count=1 conv=notrunc 2>/dev/null"
 #Write-Host $CMD
 wsl docker exec $SelectInstance bash -c $CMD
 
 $Bin = 7
-$CMD = "echo -en '\x" + $Bin.ToString("X2") + "' | dd of=" + $global:TargetMemFolder + "/mmap5.bin bs=1 seek=2 count=1 conv=notrunc 2>/dev/null"
+$CMD = "echo -en '\x" + $Bin.ToString("X2") + "' | dd of=" + $global:TargetMemFolder + "/mmap5.bin bs=1 seek=8 count=1 conv=notrunc 2>/dev/null"
 #Write-Host $CMD
 wsl docker exec $SelectInstance bash -c $CMD
 
