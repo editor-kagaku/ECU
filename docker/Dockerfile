@@ -82,10 +82,10 @@ RUN chmod +x cfg
 COPY AUTOSAR_MMOD_XMLSchema.zip .
 RUN unzip AUTOSAR_MMOD_XMLSchema.zip
 
-WORKDIR /root/modelcar/atk2-sc1/target/hsbrh850f1k_gcc
-RUN sed -i -E "s;16000000;16000;g" target_hw_counter.h
-RUN sed -i -E "s;6.25e-08;0.0000625;g" target_hw_counter.yaml
-RUN ruby ../../utils/abrex/abrex.rb ./target_hw_counter.yaml
+# WORKDIR /root/modelcar/atk2-sc1/target/hsbrh850f1k_gcc
+# RUN sed -i -E "s;16000000;16000;g" target_hw_counter.h
+# RUN sed -i -E "s;6.25e-08;0.0000625;g" target_hw_counter.yaml
+# RUN ruby ../../utils/abrex/abrex.rb ./target_hw_counter.yaml
 
 WORKDIR /root/modelcar/a-rtegen/bin/schema
 RUN cp /root/modelcar/atk2-sc1/cfg/cfg/AUTOSAR_4-0-3_STRICT.xsd .
@@ -94,15 +94,15 @@ RUN cp /root/modelcar/atk2-sc1/cfg/cfg/xml.xsd .
 WORKDIR /root/modelcar/a-rtegen/bin/bin/
 RUN sed -i -E "s;=\(;=\$(;g" rtegen.sh
 
-WORKDIR /root/modelcar/swc-application/common/arxmls
-RUN sed -i -E "s;0.000125;0.125;g" RcCar.arxml
-RUN sed -i -E "s;0.000125;0.125;g" RcCar_D.arxml
+# WORKDIR /root/modelcar/swc-application/common/arxmls
+# RUN sed -i -E "s;0.000125;0.125;g" RcCar.arxml
+# RUN sed -i -E "s;0.000125;0.125;g" RcCar_D.arxml
 
-WORKDIR /root/modelcar/swc-application/EcuM
-RUN sed -i -E "s;define ALARM_TICK_125US\t1000U;define ALARM_TICK_125US\t1000000U;g" EcuM_Callout.h
+# WORKDIR /root/modelcar/swc-application/EcuM
+# RUN sed -i -E "s;define ALARM_TICK_125US\t1000U;define ALARM_TICK_125US\t1000000U;g" EcuM_Callout.h
 
-WORKDIR /root/modelcar/swc-application/common/swcs
-RUN sed -i -E "s;(define BUZZER_CYCLE_NS[[:space:]]*)125U;\1125000U;g" ModelCarControl.h
+# WORKDIR /root/modelcar/swc-application/common/swcs
+# RUN sed -i -E "s;(define BUZZER_CYCLE_NS[[:space:]]*)125U;\1125000U;g" ModelCarControl.h
 
 WORKDIR /root/modelcar/swc-application/1ecu/ecu_cbo
 RUN ../../../atk2-sc1/configure -T hsbrh850f1k_gcc -t ../../../atk2-sc1/sample
@@ -143,3 +143,4 @@ RUN echo "MMAP, 0xFF305288, mmap5.bin" >> memory.txt
 RUN for i in {0..255}; do echo -en "\xff\xff\xff\xff" >> mmap1.bin ; done
 RUN for i in {2..5}; do cp mmap1.bin mmap$i.bin; done
 RUN sed -i -E "s:DEBUG_FUNC_ENABLE_SKIP_CLOCK    1:DEBUG_FUNC_ENABLE_SKIP_CLOCK    0:g" device_config.txt
+RUN sed -i -E "s:DEBUG_FUNC_ENABLE_SKIP_CLOCK    1:DEBUG_FUNC_ENABLE_SKIP_CLOCK    0:g" device_config_with_can.txt
