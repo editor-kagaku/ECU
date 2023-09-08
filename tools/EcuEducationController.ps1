@@ -34,7 +34,9 @@ Set-Location $path
 $global:current_path = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $global:current_path
 
-$SelectInstance = "modelcar"
+#$SelectInstance = "modelcar"
+$SelectInstance = "modelcar_ini2"
+#$SelectInstance = "modelcar_2"
 
 # フォームを先に作成する
 $ControlFrame = New-Object Form

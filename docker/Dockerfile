@@ -17,7 +17,15 @@ RUN apt-get update && \
         lib32z1 \
         lib32stdc++6 \
         openjdk-8-jre \
-        ruby
+        ruby \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
+
+WORKDIR /etc/apt/sources.list.d
+RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > ros-latest.list
+RUN cat ros-latest.list
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+RUN apt update && apt install -y ros-noetic-desktop-full
 
 WORKDIR /opt/athrill
 RUN wget https://github.com/toppers/athrill-gcc-v850e2m/releases/download/v1.1/athrill-gcc-package.tar.gz && \
@@ -62,7 +70,9 @@ RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/swc
 RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/tools
 RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/README.txt
 RUN wget https://www.toppers.jp/download.cgi/a-rtegen-1.4.0.src.tar.gz
-RUN wget https://www.toppers.jp/download.cgi/a-comstack-1.4.0.tar.gz
+# A-COMSTACK F1Kターゲットは githubに配置されているため、ダウンロード先を変更する。
+#RUN wget https://www.toppers.jp/download.cgi/a-comstack-1.4.0.tar.gz
+RUN git clone -b target/v1.4.0 --depth=1 https://github.com/toppers/a-comstack
 RUN wget https://www.toppers.jp/download.cgi/a-can_hsbrh850f1l_ccrh-20150715.tar.gz
 RUN wget https://www.toppers.jp/download.cgi/atk2-sc1_hsbrh850f1k_ccrh-20210106.tar.gz
 RUN tar zxf a-rtegen-1.4.0.src.tar.gz
@@ -115,7 +125,7 @@ RUN sed -i -E "s;^(CDEFS := .*);\1 \$(USER_MACRO);g" Makefile
 RUN sed -i -E "s;APPL_COBJS = .*\.o;APPL_COBJS = \$(APPLNAME:=.o);g" Makefile
 RUN sed -i -E "s:CFGNAME = .*:CFGNAME = Ecuc_CBO:g" Makefile
 RUN sed -i -E "s;(OsIsrCategory: CATEGORY_2);\1\n      OsIsrInterruptSource: ENABLE;g" Ecuc_CBO.yaml
-RUN sed -i -E "s;0.000125;0.125;g" Ecuc_CBO.yaml
+#RUN sed -i -E "s;0.000125;0.125;g" Ecuc_CBO.yaml
 RUN echo #!/bin/sh > generator.sh
 RUN echo OS_DIR=../../../atk2-sc1 >> generator.sh
 RUN echo TARGET_DIR=\$OS_DIR/target/hsbrh850f1k_gcc >> generator.sh

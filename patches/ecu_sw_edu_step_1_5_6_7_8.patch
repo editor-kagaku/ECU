@@ -109,7 +109,7 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +											</ACCESSED-VARIABLE>
 +										</VARIABLE-ACCESS>
 +									</DATA-SEND-POINTS>
-+									<SYMBOL>LedControl</SYMBOL>
++									<SYMBOL></SYMBOL>
 +								</RUNNABLE-ENTITY>
 +							</RUNNABLES>
 +							<SUPPORTS-MULTIPLE-INSTANTIATION>false</SUPPORTS-MULTIPLE-INSTANTIATION>

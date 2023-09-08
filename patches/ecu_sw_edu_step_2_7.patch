@@ -6,8 +6,8 @@ diff -uNr ecu_education_work_step1/swc-application/common/arxmls/RcCar.arxml ecu
  							<TYPE-TREF DEST="APPLICATION-SW-COMPONENT-TYPE">/RcCar/AppLedControl</TYPE-TREF>
  						</SW-COMPONENT-PROTOTYPE>
 +						<SW-COMPONENT-PROTOTYPE>
-+							<SHORT-NAME>CddSwState</SHORT-NAME>
-+							<TYPE-TREF DEST="COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE">/RcCar/CddSwState</TYPE-TREF>
++							<SHORT-NAME></SHORT-NAME>
++							<TYPE-TREF DEST="COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE"></TYPE-TREF>
 +						</SW-COMPONENT-PROTOTYPE>
  					</COMPONENTS>
  					<CONNECTORS>
