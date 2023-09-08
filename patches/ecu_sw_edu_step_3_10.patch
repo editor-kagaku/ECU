@@ -1,0 +1,26 @@
+diff -uNr ecu_education_work_step2/swc-application/EcuM/EcuM_Callout.h ecu_education_work_step3/swc-application/EcuM/EcuM_Callout.h
+--- ecu_education_work_step2/swc-application/EcuM/EcuM_Callout.h	2023-07-02 23:20:53.654070300 +0900
++++ ecu_education_work_step3/swc-application/EcuM/EcuM_Callout.h	2023-09-11 05:46:35.567281200 +0900
+@@ -117,5 +117,12 @@
+ 	 */
+ 
++#ifdef ECU_X_ALARM_100ms
++	ercd += SetRelAlarm(ECU_X_ALARM_100ms, ALARM_TICK_100MS, ALARM_TICK_100MS);
++#endif /* ECU_X_ALARM_100ms */
++#ifdef ECU_X_ALARM_20ms_SCHM
++	ercd += SetRelAlarm(ECU_X_ALARM_20ms_SCHM, ALARM_TICK_20MS, ALARM_TICK_20MS);
++#endif /* ECU_X_ALARM_20ms_SCHM */
++
+ #ifdef ECU_CBO_ALARM_125us
+ 	ercd += SetRelAlarm(ECU_CBO_ALARM_125us, ALARM_TICK_125US, ALARM_TICK_125US);
+ #endif /* ECU_CBO_ALARM_125us */
+@@ -125,6 +132,9 @@
+ #ifdef ECU_CBO_ALARM_100ms
+ 	ercd += SetRelAlarm(ECU_CBO_ALARM_100ms, ALARM_TICK_100MS, ALARM_TICK_100MS);
+ #endif /* ECU_CBO_ALARM_100ms */
++#ifdef ECU_CBO_ALARM_20ms_SCHM
++	ercd += SetRelAlarm(ECU_CBO_ALARM_20ms_SCHM, ALARM_TICK_20MS, ALARM_TICK_20MS);
++#endif /* ECU_CBO_ALARM_20ms_SCHM */
+ 
+ #ifdef ECU_CB_ALARM_125us
+ 	ercd += SetRelAlarm(ECU_CB_ALARM_125us, ALARM_TICK_125US, ALARM_TICK_125US);

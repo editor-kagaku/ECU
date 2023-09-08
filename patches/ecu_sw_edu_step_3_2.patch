@@ -1,0 +1,20 @@
+diff -uNr ecu_education_work_step2/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml ecu_education_work_step3/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml
+--- ecu_education_work_step2/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2023-08-30 15:41:16.701824700 +0900
++++ ecu_education_work_step3/swc-application/1ecu/ecu_cbo/Ecuc_CBO.yaml	2023-09-11 05:46:34.987475600 +0900
+@@ -194,16 +212,6 @@
+         RteEventRef: /RcCar/AppLedControl/IB_LC/LedControl_timingEvent
+         RteMappedToTaskRef: /Ecu_CBO/Os/ECU_CBO_TASK_100ms
+         RteUsedOsAlarmRef: /Ecu_CBO/Os/ECU_CBO_ALARM_100ms
+-    SWCI_CddSwState:
+-      DefinitionRef: RteSwComponentInstance
+-      RteSoftwareComponentInstanceRef: /RcCar/Composition_RcCar/CddSwState
+-      IB_CSS_TimingEvent_SwState_500ms:
+-        DefinitionRef: RteEventToTaskMapping
+-        RteActivationOffset: 0.0
+-        RtePositionInTask: 9
+-        RteEventRef: /RcCar/CddSwState/IB_CSS/SwState_timingEvent
+-        RteMappedToTaskRef: /Ecu_CBO/Os/ECU_CBO_TASK_100ms
+-        RteUsedOsAlarmRef: /Ecu_CBO/Os/ECU_CBO_ALARM_100ms
+     RteOsInteraction:
+       RteUsedOsActivation1:
+         DefinitionRef: RteUsedOsActivation

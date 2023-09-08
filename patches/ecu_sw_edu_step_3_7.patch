@@ -1,0 +1,9 @@
+diff -uNr ecu_education_work_step2/swc-application/1ecu/ecu_cbo/generator.sh ecu_education_work_step3/swc-application/1ecu/ecu_cbo/generator.sh
+--- ecu_education_work_step2/swc-application/1ecu/ecu_cbo/generator.sh	2023-07-02 23:20:53.174785700 +0900
++++ ecu_education_work_step3/swc-application/1ecu/ecu_cbo/generator.sh	2023-09-11 05:46:35.035999300 +0900
+@@ -3,4 +3,4 @@
+ RTE_DIR=../../../a-rtegen
+ ARXML_DIR=../../common/arxmls
+ APP_NAME=Ecuc_CBO
+-$RTE_DIR/bin/bin/rtegen.sh $TARGET_DIR/target_hw_counter.arxml $ARXML_DIR/DataTypes.arxml $ARXML_DIR/BswMD_RLIN3x_RX_ISR.arxml $ARXML_DIR/RcCar.arxml ../System.arxml $APP_NAME.arxml
++$RTE_DIR/bin/bin/rtegen.sh $TARGET_DIR/target_hw_counter.arxml $ARXML_DIR/DataTypes.arxml $ARXML_DIR/BswMD_Rx.arxml ../System_EcuInstance_CBO.arxml $APP_NAME.arxml
