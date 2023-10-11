@@ -1,18 +1,6 @@
-diff -uNr ecu_education_work_step2/swc-application/1ecu/ecu_cbo/device_config_with_can.txt ecu_education_work_step3/swc-application/1ecu/ecu_cbo/device_config_with_can.txt
---- ecu_education_work_step2/swc-application/1ecu/ecu_cbo/device_config_with_can.txt	2023-07-04 04:29:51.851834500 +0900
-+++ ecu_education_work_step3/swc-application/1ecu/ecu_cbo/device_config_with_can.txt	2023-09-11 05:46:35.028479500 +0900
-@@ -7,11 +7,6 @@
- DEBUG_FUNC_ENABLE_CAN      1
- DEVICE_CONFIG_CAN_FD		100000
- DEBUG_FUNC_CAN_RX_QUEUE_SIZE	256
--DEBUG_FUNC_MROS_NODE_NAME	athrill_test_node
--DEBUG_FUNC_MROS_TOPIC_PUB_NUM   1
--DEBUG_FUNC_MROS_TOPIC_PUB_0 channel0/CAN_IDE0_RTR0_DLC8_0x001
--DEBUG_FUNC_MROS_TOPIC_SUB_NUM   4
--DEBUG_FUNC_MROS_TOPIC_SUB_0 channel0/CAN_IDE0_RTR0_DLC8_0x123
--DEBUG_FUNC_MROS_TOPIC_SUB_1 channel0/CAN_IDE0_RTR0_DLC8_0x122
--DEBUG_FUNC_MROS_TOPIC_SUB_2 channel0/CAN_IDE0_RTR0_DLC8_0x003
--DEBUG_FUNC_MROS_TOPIC_SUB_3 channel0/CAN_IDE0_RTR0_DLC8_0x004
-+DEBUG_FUNC_MROS_NODE_NAME	athrill_ecu_cbo
-+DEBUG_FUNC_MROS_TOPIC_SUB_NUM   1
-+DEBUG_FUNC_MROS_TOPIC_SUB_0 channel0/CAN_IDE0_RTR0_DLC8_0x001
+diff -uNr ecu_education_work_step2/swc-application/1ecu/ecu_extract.sh ecu_education_work_step3/swc-application/1ecu/ecu_extract.sh
+--- ecu_education_work_step2/swc-application/1ecu/ecu_extract.sh	1970-01-01 09:00:00.000000000 +0900
++++ ecu_education_work_step3/swc-application/1ecu/ecu_extract.sh	2023-09-11 05:46:35.063515400 +0900
+@@ -0,0 +1,2 @@
++RTE_DIR=../../a-rtegen
++ruby $RTE_DIR/ecu_extractor/ecu_extractor.rb ./System.arxml ../common/arxmls/RcCar.arxml 
