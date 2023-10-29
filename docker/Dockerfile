@@ -89,6 +89,7 @@ RUN mv cfg-linux-static-1_9_6 cfg
 RUN chmod +x cfg
 #TODO 以下は、一時的な措置のため、AUTOSAR で再公開の際に、改めてダウンロード先を変更すること
 #RUN wget https://www.autosar.org/fileadmin/user_upload/standards/classic/4-0/AUTOSAR_MMOD_XMLSchema.zip
+RUN wget --no-check-certificate https://www.autosar.org/fileadmin/standards/R4-0/CP/AUTOSAR_MMOD_XMLSchema.zip
 COPY AUTOSAR_MMOD_XMLSchema.zip .
 RUN unzip AUTOSAR_MMOD_XMLSchema.zip
 
