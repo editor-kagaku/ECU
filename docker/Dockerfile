@@ -17,15 +17,7 @@ RUN apt-get update && \
         lib32z1 \
         lib32stdc++6 \
         openjdk-8-jre \
-        ruby \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
-
-WORKDIR /etc/apt/sources.list.d
-RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > ros-latest.list
-RUN cat ros-latest.list
-RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-RUN apt update && apt install -y ros-noetic-desktop-full
+        ruby
 
 WORKDIR /opt/athrill
 RUN wget https://github.com/toppers/athrill-gcc-v850e2m/releases/download/v1.1/athrill-gcc-package.tar.gz && \
@@ -34,20 +26,12 @@ RUN wget https://github.com/toppers/athrill-gcc-v850e2m/releases/download/v1.1/a
     mv usr/local/athrill-gcc /opt/athrill && \
     mkdir athrill-target-rh850f1x
 
-##RUN git clone --depth 1 https://github.com/toppers/athrill-target-rh850f1x.git
-#RUN git clone --recursive https://github.com/toppers/athrill-target-rh850f1x.git
-
-#WORKDIR /root/athrill-target-rh850f1x
-#RUN git checkout b696a95aed3d02ec49bb629dc03068cc3fdc568e
-#RUN git reset --hard
-
 WORKDIR /opt/athrill/athrill-target-rh850f1x
 RUN git init
 RUN git remote add origin https://github.com/toppers/athrill-target-rh850f1x.git
 RUN git fetch origin b696a95aed3d02ec49bb629dc03068cc3fdc568e
 RUN git reset --hard FETCH_HEAD
 
-#WORKDIR /opt/athrill/athrill-target-rh850f1x
 RUN rm -rf athrill
 RUN git clone --depth 1 https://github.com/toppers/athrill.git
 
@@ -64,19 +48,19 @@ RUN echo >> /etc/bash.bashrc
 RUN echo '# Add path for athrill' >> /etc/bash.bashrc
 RUN echo 'export PATH=/opt/athrill/athrill-gcc/bin:/opt/athrill/bin:${PATH}' >> /etc/bash.bashrc
 
+WORKDIR /root
+RUN ln -s ECU-main ecu_education-main
+
 WORKDIR /root/modelcar
 RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/driver
 RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/swc-application
 RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/tools
 RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/README.txt
 RUN wget https://www.toppers.jp/download.cgi/a-rtegen-1.4.0.src.tar.gz
-# A-COMSTACK F1Kターゲットは githubに配置されているため、ダウンロード先を変更する。
-#RUN wget https://www.toppers.jp/download.cgi/a-comstack-1.4.0.tar.gz
 RUN git clone -b target/v1.4.0 --depth=1 https://github.com/toppers/a-comstack
 RUN wget https://www.toppers.jp/download.cgi/a-can_hsbrh850f1l_ccrh-20150715.tar.gz
 RUN wget https://www.toppers.jp/download.cgi/atk2-sc1_hsbrh850f1k_ccrh-20210106.tar.gz
 RUN tar zxf a-rtegen-1.4.0.src.tar.gz
-RUN tar zxf a-comstack-1.4.0.tar.gz
 RUN tar zxf a-can_hsbrh850f1l_ccrh-20150715.tar.gz
 RUN tar zxf atk2-sc1_hsbrh850f1k_ccrh-20210106.tar.gz
 RUN rm a*.gz
@@ -89,14 +73,9 @@ RUN mv cfg-linux-static-1_9_6 cfg
 RUN chmod +x cfg
 #TODO 以下は、一時的な措置のため、AUTOSAR で再公開の際に、改めてダウンロード先を変更すること
 #RUN wget https://www.autosar.org/fileadmin/user_upload/standards/classic/4-0/AUTOSAR_MMOD_XMLSchema.zip
-RUN wget --no-check-certificate https://www.autosar.org/fileadmin/standards/R4-0/CP/AUTOSAR_MMOD_XMLSchema.zip
-COPY AUTOSAR_MMOD_XMLSchema.zip .
+#RUN wget --no-check-certificate https://www.autosar.org/fileadmin/standards/R4-0/CP/AUTOSAR_MMOD_XMLSchema.zip
+RUN wget https://raw.githubusercontent.com/pulsar-pursuer/ecu_education/1abf101f2f8cdf2f70e725d52f653526ccdc7749/docker/AUTOSAR_MMOD_XMLSchema.zip
 RUN unzip AUTOSAR_MMOD_XMLSchema.zip
-
-# WORKDIR /root/modelcar/atk2-sc1/target/hsbrh850f1k_gcc
-# RUN sed -i -E "s;16000000;16000;g" target_hw_counter.h
-# RUN sed -i -E "s;6.25e-08;0.0000625;g" target_hw_counter.yaml
-# RUN ruby ../../utils/abrex/abrex.rb ./target_hw_counter.yaml
 
 WORKDIR /root/modelcar/a-rtegen/bin/schema
 RUN cp /root/modelcar/atk2-sc1/cfg/cfg/AUTOSAR_4-0-3_STRICT.xsd .
@@ -104,16 +83,6 @@ RUN cp /root/modelcar/atk2-sc1/cfg/cfg/xml.xsd .
 
 WORKDIR /root/modelcar/a-rtegen/bin/bin/
 RUN sed -i -E "s;=\(;=\$(;g" rtegen.sh
-
-# WORKDIR /root/modelcar/swc-application/common/arxmls
-# RUN sed -i -E "s;0.000125;0.125;g" RcCar.arxml
-# RUN sed -i -E "s;0.000125;0.125;g" RcCar_D.arxml
-
-# WORKDIR /root/modelcar/swc-application/EcuM
-# RUN sed -i -E "s;define ALARM_TICK_125US\t1000U;define ALARM_TICK_125US\t1000000U;g" EcuM_Callout.h
-
-# WORKDIR /root/modelcar/swc-application/common/swcs
-# RUN sed -i -E "s;(define BUZZER_CYCLE_NS[[:space:]]*)125U;\1125000U;g" ModelCarControl.h
 
 WORKDIR /root/modelcar/swc-application/1ecu/ecu_cbo
 RUN ../../../atk2-sc1/configure -T hsbrh850f1k_gcc -t ../../../atk2-sc1/sample
@@ -126,7 +95,6 @@ RUN sed -i -E "s;^(CDEFS := .*);\1 \$(USER_MACRO);g" Makefile
 RUN sed -i -E "s;APPL_COBJS = .*\.o;APPL_COBJS = \$(APPLNAME:=.o);g" Makefile
 RUN sed -i -E "s:CFGNAME = .*:CFGNAME = Ecuc_CBO:g" Makefile
 RUN sed -i -E "s;(OsIsrCategory: CATEGORY_2);\1\n      OsIsrInterruptSource: ENABLE;g" Ecuc_CBO.yaml
-#RUN sed -i -E "s;0.000125;0.125;g" Ecuc_CBO.yaml
 RUN echo #!/bin/sh > generator.sh
 RUN echo OS_DIR=../../../atk2-sc1 >> generator.sh
 RUN echo TARGET_DIR=\$OS_DIR/target/hsbrh850f1k_gcc >> generator.sh
