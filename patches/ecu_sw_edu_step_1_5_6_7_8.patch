@@ -64,18 +64,18 @@ diff -uNr ecu_education_work_step0/swc-application/common/arxmls/RcCar.arxml ecu
 +					</PORTS>
 +					<INTERNAL-BEHAVIORS>
 +						<SWC-INTERNAL-BEHAVIOR>
-+							<SHORT-NAME></SHORT-NAME>
++							<SHORT-NAME>IB_LC</SHORT-NAME>
 +							<EVENTS>
 +								<TIMING-EVENT>
-+									<SHORT-NAME></SHORT-NAME>
-+									<START-ON-EVENT-REF DEST="RUNNABLE-ENTITY"></START-ON-EVENT-REF>
-+									<PERIOD></PERIOD>
++									<SHORT-NAME>LedControl_timingEvent</SHORT-NAME>
++									<START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/RcCar/AppLedControl/IB_LC/LedControl</START-ON-EVENT-REF>
++									<PERIOD>0.1</PERIOD>
 +								</TIMING-EVENT>
 +							</EVENTS>
 +							<HANDLE-TERMINATION-AND-RESTART>NO-SUPPORT</HANDLE-TERMINATION-AND-RESTART>
 +							<RUNNABLES>
 +								<RUNNABLE-ENTITY>
-+									<SHORT-NAME></SHORT-NAME>
++									<SHORT-NAME>LedControl</SHORT-NAME>
 +									<MINIMUM-START-INTERVAL>0.0</MINIMUM-START-INTERVAL>
 +									<CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
 +									<DATA-RECEIVE-POINT-BY-ARGUMENTS>
