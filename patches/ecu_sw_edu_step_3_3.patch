@@ -13,6 +13,14 @@ diff -uNr ecu_education_work_step2/swc-application/1ecu/ecu_cbo/Makefile ecu_edu
  LDFLAGS := $(LDFLAGS) 
  LIBS := $(LIBS) $(CXXLIBS)
  CFLAGS = $(COPTS) $(CDEFS) $(INCLUDES)
+@@ -205,7 +205,6 @@
+ 	CddBodyControl \
+ 	CddController \
+ 	CddRcCar \
+-	CddSwState \
+ 	AppLedControl \
+ 	OperationManager \
+ 	DriveManager \
 @@ -218,9 +217,24 @@
  	driver_if \
  	rcb3 \
