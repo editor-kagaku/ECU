@@ -58,10 +58,8 @@ RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/too
 RUN svn export http://dev.toppers.jp/svn_user/contrib/rc_autosar_rh850/trunk/README.txt
 RUN wget https://www.toppers.jp/download.cgi/a-rtegen-1.4.0.src.tar.gz
 RUN git clone -b target/v1.4.0 --depth=1 https://github.com/toppers/a-comstack
-RUN wget https://www.toppers.jp/download.cgi/a-can_hsbrh850f1l_ccrh-20150715.tar.gz
 RUN wget https://www.toppers.jp/download.cgi/atk2-sc1_hsbrh850f1k_ccrh-20210106.tar.gz
 RUN tar zxf a-rtegen-1.4.0.src.tar.gz
-RUN tar zxf a-can_hsbrh850f1l_ccrh-20150715.tar.gz
 RUN tar zxf atk2-sc1_hsbrh850f1k_ccrh-20210106.tar.gz
 RUN rm a*.gz
 RUN mkdir -p atk2-sc1/cfg/cfg

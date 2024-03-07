@@ -1,6 +1,8 @@
 diff -uNr ecu_education_work_step2/swc-application/1ecu/ecu_extract.sh ecu_education_work_step3/swc-application/1ecu/ecu_extract.sh
 --- ecu_education_work_step2/swc-application/1ecu/ecu_extract.sh	1970-01-01 09:00:00.000000000 +0900
 +++ ecu_education_work_step3/swc-application/1ecu/ecu_extract.sh	2023-09-11 05:46:35.063515400 +0900
-@@ -0,0 +1,2 @@
+@@ -0,0 +1,4 @@
 +RTE_DIR=../../a-rtegen
 +ruby $RTE_DIR/ecu_extractor/ecu_extractor.rb ./System.arxml ../common/arxmls/RcCar.arxml 
++
++cp ecu_cbo/mmap*.bin ecu_x/.
